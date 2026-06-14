@@ -1,0 +1,47 @@
+name: Feature request
+description: Suggest an improvement to the DevGuard skill bundle.
+title: "[Feature]: "
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting an improvement.
+
+        Please describe the problem first, then the proposed change, so the
+        request stays grounded in a real workflow need.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem to solve
+      description: What pain point or gap does this request address?
+      placeholder: It is hard to see which focused expansion block was triggered.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed change
+      description: Describe the behavior or asset you want added or changed.
+      placeholder: Add a focused expansion trigger line to the default summary output.
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope and non-goals
+      description: What should this change include, and what should it avoid?
+      placeholder: Include routing-level disclosure only. Do not expand to full detailed mode.
+  - type: textarea
+    id: examples
+    attributes:
+      label: Example prompts or scenarios
+      description: Share example prompts, workflows, or before/after output.
+      render: markdown
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional context
+      description: Anything else maintainers should know.
+

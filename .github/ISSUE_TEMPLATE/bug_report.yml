@@ -1,0 +1,64 @@
+name: Bug report
+description: Report a reproducible problem in the DevGuard skill bundle.
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a bug.
+
+        Please include enough detail for someone else to reproduce the problem
+        without guessing hidden context.
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: A short description of the problem.
+      placeholder: DevGuard emits a full manifest in summary mode for a normal task.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Reproduction steps
+      description: Exact steps, prompts, inputs, or files needed to reproduce.
+      placeholder: |
+        1. Use prompt ...
+        2. Run script ...
+        3. Observe output ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      placeholder: Only Execution Summary plus Task Contract Summary should appear.
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      placeholder: A full Skill Routing Decision was emitted instead.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: Paste logs, screenshots, output excerpts, or failing checks.
+      render: markdown
+  - type: input
+    id: version
+    attributes:
+      label: Affected version or commit
+      placeholder: ceda471 or v0.1.0
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, host app, runtime, or other environment details.
+      placeholder: Windows 11, Codex desktop, Chrome extension, local skill install
+
