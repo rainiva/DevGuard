@@ -1,5 +1,11 @@
 # DevGuard
 
+Progressive-loading AI development guardrails for coding, bug fixing, UI implementation, refactors, reviews, and release checks.
+
+[![MIT License](https://img.shields.io/github/license/rainiva/DevGuard)](LICENSE)
+[![Tag](https://img.shields.io/github/v/tag/rainiva/DevGuard?label=tag)](https://github.com/rainiva/DevGuard/tags)
+[![Issues](https://img.shields.io/github/issues/rainiva/DevGuard)](https://github.com/rainiva/DevGuard/issues)
+
 DevGuard 是一套面向编码、修 Bug、UI 落地、重构迁移、发布检查和代码审查的渐进式 AI 开发治理技能。它的职责不是直接替代具体实现技能，而是在真正执行前，把任务先路由清楚、把规则按需加载清楚、把影响分析清楚、把 Task Contract 冻结清楚，再进入 TDD 和执行。
 
 ## Core Principle
@@ -268,6 +274,13 @@ devguard/
 ```text
 Use $devguard to route this task, perform required project understanding, run official docs check before impact analysis when platform or framework constraints matter, load the minimum required rules, keep the default outward output to Execution Summary plus Task Contract Summary, and if risk appears expand only the affected part before freezing the required Task Contract.
 ```
+
+## Release Surface
+
+- License：`MIT`，见 `LICENSE`
+- Community：已提供 GitHub issue forms 与 PR template
+- Versioning：首个公开 tag 为 `v0.1.0`
+- Changelog：见 `CHANGELOG.md`
 
 ## Scope Note
 
