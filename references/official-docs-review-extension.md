@@ -16,6 +16,10 @@ Verify:
 8. compatibility notes and known limitations were considered
 9. UI-facing work follows platform design guidelines, or the deviation is explicitly justified
 10. tests or manual acceptance steps cover the official constraints that mattered
+11. Context7 or equivalent tooling was scoped to the correct library, version, and API or control surface
+12. high-risk tasks did not rely only on Context7 summaries when original official-doc verification was required
+13. fallback or partial-official-guidance states were disclosed when official verification was incomplete
+14. conflicts between official guidance, project behavior, and test results were resolved explicitly
 
 ## Blocking Conditions
 
@@ -26,3 +30,6 @@ Flag review blockers when:
 - lifecycle, threading, permission, template, or host requirements are violated
 - UI work drifts from platform design guidelines without a documented reason
 - repeated failed bug-fix work still skips official-docs backchecking
+- a high-risk platform decision relies only on Context7 summary output without original official-doc or API-reference verification
+- Context7 matched the wrong library or wrong version and still drove the implementation
+- fallback official-docs evidence is treated as fully confirmed official guidance

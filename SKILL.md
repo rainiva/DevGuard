@@ -16,7 +16,7 @@ Do these things:
 3. Choose the minimum skill chain and rule-loading plan.
 4. Emit compact pre-execution output before execution begins: `Execution Summary` by default, always keep `Task Contract Summary` visible once it exists, use focused expansion for risky or anomalous parts, and use full manifests or full reports only when the user or audit-style mode explicitly requires them.
 5. Run project understanding at the routed rigor before impact analysis when the task changes code or structure.
-6. Run official docs check before impact analysis when platform, framework, SDK, host, control-template, system-API, or official design constraints may govern the implementation.
+6. Run official docs check before impact analysis when platform, framework, SDK, host, control-template, system-API, official design constraints, or version-specific official guidance may govern the implementation.
 7. Run impact analysis at the routed rigor before non-trivial execution work and freeze a Task Contract before coding, repair, or refactor work starts.
 8. Enforce stage gates for evidence, TDD, review, and blocking conditions.
 9. Dynamically reroute when new facts change the risk profile, scope boundary, or acceptance bar.
@@ -112,6 +112,9 @@ DevGuard is the external skill name. Internally, route work through the modular 
 - Even in high-risk or anomaly cases, expand only the risky or anomalous sections by default. Do not dump unrelated detail from the rest of the route, analysis, or contract.
 - Prefer CodeGraph or equivalent structural project-understanding tools over plain full-text search when the task changes code.
 - Let project understanding establish structural facts first, let official docs check establish platform or framework constraints second, then let impact analysis reason about change impact, then let the Task Contract freeze execution.
+- Treat Context7 or equivalent official-docs MCP as the preferred AI-friendly ingress for version-scoped official guidance when available, but do not confuse it with the final authority source.
+- For ordinary platform work, a scoped Context7-backed summary may be enough to guide impact analysis; for high-risk constraints, verify the original official docs or API reference before freezing the Task Contract.
+- If Context7 output, original official docs, project behavior, and test results conflict, prefer original official docs plus observed behavior, and record the mismatch explicitly.
 - Let impact analysis fan out to identify possible impact and risk, then use the Task Contract to converge the approved goal, scope, constraints, tests, and acceptance criteria.
 - Except for headings, field labels, literal status values, rule names, paths, code identifiers, and predefined keywords, DevGuard output prose should be written in Chinese.
 - Keep all references one hop away from this file. Do not build deep reference chains.
@@ -129,6 +132,7 @@ The current implementation covers:
 - Tiered rule-loading disclosure with summary, focused risk or anomaly expansion, and detailed manifest
 - CodeGraph-first project understanding with depth-based outputs and fallback paths
 - Official platform, framework, SDK, host, and design-guideline checks before impact analysis when required
+- Context7-first official-docs lookup with high-risk original-source verification rules
 - Tiered Impact Analysis output with summary, full analysis, and strict additions
 - Shared gates
 - Task Contract gating before execution

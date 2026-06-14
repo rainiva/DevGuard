@@ -247,6 +247,12 @@ def main() -> int:
         invalid.append("references/task-routing.md missing on-demand official-docs loading rule")
     if "Do not query broad official documentation packs" not in official_docs_content:
         invalid.append("references/official-docs-check.md missing on-demand official-docs loading rule")
+    if "Context7" not in official_docs_content:
+        invalid.append("references/official-docs-check.md missing Context7 guidance")
+    if "original official docs" not in official_docs_content and "original official docs or API reference" not in official_docs_content:
+        invalid.append("references/official-docs-check.md missing original official-doc verification rule")
+    if "native_ui_guideline" not in task_routing_content:
+        invalid.append("references/task-routing.md missing native_ui_guideline risk tag")
 
     chains_match = re.search(
         r"## Default Skill Chains\s+(.*?)\s+## Task Profile",

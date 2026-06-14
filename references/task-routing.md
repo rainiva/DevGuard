@@ -73,6 +73,7 @@ Apply only the tags supported by current facts:
 - `host_compatibility`
 - `deprecated_api`
 - `platform_design`
+- `native_ui_guideline`
 
 ## Complexity Levels
 
@@ -92,7 +93,7 @@ Execution mode decides process rigor. It does not force full default disclosure.
 
 ## Default Skill Chains
 
-`official-docs-check?` means route the check only when the Official Docs Check Gate says platform, framework, SDK, host, control-template, lifecycle, threading, permission, installer, or design constraints may govern the task. `task-contract-freeze` means freeze the Task Contract from `references/report-templates.md` before TDD or execution.
+`official-docs-check?` means route the check only when the Official Docs Check Gate says platform, framework, SDK, host, control-template, lifecycle, threading, permission, installer, component-library, or design constraints may govern the task. `task-contract-freeze` means freeze the Task Contract from `references/report-templates.md` before TDD or execution.
 
 - New feature: `codegraph-project-understanding -> official-docs-check? -> impact-analysis -> task-contract-freeze -> tdd-workflow -> daily-development -> code-review`
 - UI implementation: `codegraph-project-understanding -> official-docs-check? -> impact-analysis -> task-contract-freeze -> tdd-workflow -> ui-implementation -> code-review`
@@ -129,13 +130,17 @@ When project understanding is required, place it before impact analysis and befo
 
 ## Official Docs Check Gate
 
-Default to required official docs check when the task touches platform, framework, SDK, system API, host-integration, control-template, lifecycle, threading-model, permission, installer, service, registry, startup, ORM, AI SDK, or platform-design constraints.
+Default to required official docs check when the task touches platform, framework, SDK, system API, host-integration, control-template, lifecycle, threading-model, permission, installer, service, registry, startup, ORM, AI SDK, MCP integration, UI component libraries, or platform-design constraints.
 
 Usually skip only when the task is clearly local business logic, documentation-only work, or a tiny text change with no platform-facing behavior.
 
 When official docs check is required, place it after project understanding and before impact analysis.
 
 Do not query broad official documentation packs or load official docs broadly. First identify the specific platform surface from project understanding, then load only the official material for that API, control, SDK, host behavior, lifecycle rule, or design guideline.
+
+If Context7 or an equivalent official-docs MCP is available, use it first to fetch version-scoped official guidance for the exact surface identified by project understanding.
+
+If the task is high-risk, lifecycle-sensitive, threading-sensitive, permission-sensitive, compatibility-sensitive, or already failed multiple times, require original official docs or API-reference verification before treating the official guidance as authoritative.
 
 ## Output Detail Decisions
 
@@ -226,7 +231,7 @@ The router should still determine:
 - Route by actual task behavior, not by keyword matching alone.
 - Prefer CodeGraph, symbol-index, call-graph, or structural project-understanding tools over plain full-text search when the task changes code.
 - Mark project understanding required when entry points, call chains, similar implementations, or impact boundaries are not already trivial and local.
-- Mark official docs check required when platform, framework, SDK, host, lifecycle, threading, control-template, permission, installer, or platform-design constraints could govern the implementation.
+- Mark official docs check required when platform, framework, SDK, host, lifecycle, threading, control-template, permission, installer, component-library, MCP, or platform-design constraints could govern the implementation.
 - Decide project-understanding, Impact Analysis, and Task Contract disclosure together: summary by default, focused expansion for risky or anomalous parts, and full detail only when explicitly required.
 - Decide official-docs disclosure with the same principle: keep it internal or summary-level by default, and expand only when risk, anomaly, or explicit detailed mode requires it.
 - Keep `Task Contract Summary` visible in default mode once execution is being prepared, even if routing and rule-loading output are compressed.

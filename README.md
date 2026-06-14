@@ -27,7 +27,7 @@ DevGuard 主要解决这几类问题：
 
 - 渐进式加载：规则按层、按阶段、按风险加载，而不是一次性全读
 - CodeGraph 优先：代码修改前先做项目结构理解，优先结构化工具而不是全文搜索猜测
-- 官方约束前置：平台、框架、SDK、宿主、控件模板等敏感任务先做 Official Docs Check
+- 官方约束前置：平台、框架、SDK、宿主、控件模板等敏感任务先做 Official Docs Check，优先用 Context7 获取版本相关官方资料，高风险约束再回官方原文核验
 - Task Contract 冻结：影响分析之后、编码之前，冻结目标、范围、约束、测试要求和验收标准
 - TDD 与证据优先：没有失败测试、最小复现或证据链，不应宣称完成
 - 披露与执行分离：内部执行可以严格，外部输出默认保持最小摘要
@@ -48,7 +48,7 @@ flowchart TB
   A["入口层<br/>SKILL.md / README.md / agents/openai.yaml"]
   B["路由层<br/>Task Router"]
   C["规则加载层<br/>Rule Loading / Rule Disclosure"]
-  D["分析门禁层<br/>CodeGraph Project Understanding<br/>Official Docs Check<br/>Impact Analysis<br/>Task Contract Freeze"]
+  D["分析门禁层<br/>CodeGraph Project Understanding<br/>Official Docs Check (Context7 / 原文核验)<br/>Impact Analysis<br/>Task Contract Freeze"]
   E["执行层<br/>TDD / Daily Development / UI / Bug Fix<br/>Migration / AI LLM / Release"]
   F["审查与控制层<br/>Code Review / Review Extensions<br/>Dynamic Reroute / Failure Retrospective"]
   G["资产层<br/>references / shared / playbooks<br/>project-rules / scripts"]
@@ -102,7 +102,7 @@ flowchart TD
 路由层内部会统一决定这些字段：
 
 - 任务类型：`feature`、`change`、`ui`、`bugfix`、`refactor`、`migration`、`review`、`release`、`ai_llm`、`performance` 等
-- 风险标签：如 `api_contract`、`auth_permission`、`rollback`、`codegraph_required`、`official_docs_required`
+- 风险标签：如 `api_contract`、`auth_permission`、`rollback`、`codegraph_required`、`official_docs_required`、`native_ui_guideline`
 - 复杂度：`S0` 到 `S4`
 - 执行模式：`FAST`、`STANDARD`、`STRICT`
 - 输出档位：`summary`、`focused-expansion`、`detailed`
@@ -184,7 +184,7 @@ DevGuard 的内部模块职责边界如下：
 | `00-task-router` | 任务理解、风险分类、执行模式、技能链、阶段门禁 |
 | `10-impact-analysis` | 变更影响、边界、风险、测试要求分析 |
 | `12-codegraph-project-understanding` | 结构化项目理解、入口、调用链、相似实现、影响范围 |
-| `13-official-docs-check` | 官方平台、框架、SDK、宿主、设计规范约束确认 |
+| `13-official-docs-check` | 官方平台、框架、SDK、宿主、设计规范约束确认，优先接 Context7，必要时回官方原文核验 |
 | `15-tdd-workflow` | `Red -> Green -> Refactor` 执行纪律 |
 | `20-daily-development` | 普通功能/变更实现 |
 | `25-performance-impact-analysis` | 性能敏感变更的额外分析 |
@@ -251,7 +251,7 @@ devguard/
 - `references/task-routing.md`：任务路由、执行模式、技能链、输出档位
 - `references/rule-loading.md`：规则层次、按需加载、摘要/展开/完整清单
 - `references/codegraph-project-understanding.md`：项目理解前置规则
-- `references/official-docs-check.md`：官方文档检查前置规则
+- `references/official-docs-check.md`：官方文档检查前置规则，包含 Context7 与官方原文核验分工
 - `references/impact-analysis-core.md`：影响分析要求
 - `references/report-templates.md`：所有摘要、展开和完整报告模板
 - `references/shared-guardrails.md`：证据、TDD、阻断、重试升级底线
@@ -272,7 +272,7 @@ devguard/
 ## Quick Start
 
 ```text
-Use $devguard to route this task, perform required project understanding, run official docs check before impact analysis when platform or framework constraints matter, load the minimum required rules, keep the default outward output to Execution Summary plus Task Contract Summary, and if risk appears expand only the affected part before freezing the required Task Contract.
+Use $devguard to route this task, perform required project understanding, run official docs check before impact analysis when platform or framework constraints matter, prefer Context7 for version-scoped official-docs lookup when available, verify original official docs for high-risk platform constraints, load the minimum required rules, keep the default outward output to Execution Summary plus Task Contract Summary, and if risk appears expand only the affected part before freezing the required Task Contract.
 ```
 
 ## Release Surface

@@ -74,11 +74,13 @@ Use when official platform, framework, SDK, host, or design constraints need a c
 
 ```md
 ## Official Docs Check Summary
+- Tool:
 - Platform / framework:
 - SDK / API / host:
-- Official constraint focus:
+- Query target:
+- Key official findings:
 - Constraint on this task:
-- Fallback basis:
+- Source mode:
 - Status: ALLOW / ALLOW_WITH_WARNINGS / BLOCKED
 ```
 
@@ -89,7 +91,8 @@ Use when only the risky official constraints need extra outward explanation.
 ```md
 ## Official Docs Focused Expansion
 - Expanded area:
-- Required official checks:
+- Context7 / source scope:
+- Need original-doc verification:
 - Key official basis:
 - Implementation constraints:
 - Test or compatibility note:
@@ -323,11 +326,15 @@ Use only when detailed disclosure is required and official platform or framework
 # Official Docs Check Report
 
 ## 1. Platform / Framework Surface
-## 2. Official Requirements To Confirm
-## 3. Official Sources
-## 4. Implementation Constraints
-## 5. Test And Compatibility Notes
-## 6. Conclusion
+## 2. Query Method And Source Mode
+## 3. Official Requirements To Confirm
+## 4. Official Sources
+## 5. Context7 Findings
+## 6. Original Official Verification
+## 7. Implementation Constraints
+## 8. Test And Compatibility Notes
+## 9. Fallback Or Unverified Items
+## 10. Conclusion
 - Status: ALLOW / ALLOW_WITH_WARNINGS / BLOCKED
 ```
 
