@@ -1,0 +1,4 @@
+interface:
+  display_name: "DevGuard"
+  short_description: "Progressive AI development guardrails and routing"
+  default_prompt: "Use $devguard to route this task, perform required project understanding, run official docs check before impact analysis when platform or framework constraints matter, load the minimum required rules, keep the default outward output to Execution Summary plus Task Contract Summary, and if risk appears expand only the affected part before freezing the required Task Contract."
