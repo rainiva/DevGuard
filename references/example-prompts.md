@@ -21,6 +21,7 @@ Default one-liner when no trigger is given:
 
 - **LITE daily:** `` `/devguard lite` fix the typo in {file} — freeze Slice in ES, no separate TCS, then edit. ``
 - **Feature:** `Use $devguard to route {task}. ES+TCS only; expand on risk.`
+- **Ambiguous feature:** `Use $devguard to route {task}. If goal, scope, or success criteria are unclear, run Socratic inquiry first — one question per turn with a recommendation — and do not freeze Task Contract until Task Profile is clear.`
 - **UI:** `Use $devguard for UI work on {task}. Real user-path verification in Contract; ES+TCS.`
 - **Bug fix:** `Use $devguard for bug fix: {task}. Red before repair; minimal diff; ES+TCS.`
 - **Refactor / migration:** `Use $devguard to plan refactor: {task}. Compatibility + rollback first; ES+TCS.`

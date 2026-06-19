@@ -1,4 +1,4 @@
 interface:
   display_name: "DevGuard"
   short_description: "Progressive AI development guardrails and routing"
-  default_prompt: "Use $devguard: route, load minimal rules, freeze Task Contract before coding. Outward output ES+TCS only."
+  default_prompt: "Use $devguard Orient->Prepare->Act per SKILL.md. Outward ES+TCS only."

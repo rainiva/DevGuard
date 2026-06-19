@@ -2,6 +2,32 @@
 
 All notable changes to DevGuard will be documented in this file.
 
+## v0.3.0 - 2026-06-19
+
+### Changed (P7)
+
+- **Three-phase workflow**: Orient → Prepare → Act (`references/control-plane-core.md`)
+- **Single entry**: SKILL.md authoritative; README trimmed to install + phase diagram
+- **Single lookup**: `references/devguard-lookup.md` replaces scattered runtime tables
+- **Module registry**: `references/devguard-module-registry.md`; 12 wrapper skills stubbed (3 thin wrappers kept)
+- **T3 externalized**: `references/report-templates-detailed.md`; main `report-templates.md` ≤280 lines
+- **Scripts**: `validate_outward_packet.py`, `sync_devguard_install.py`, `simulate_scenarios.py` in CI
+- **Benchmark**: 18 development + 3 held-out scenarios (+socratic, lite-skip, three-phase, prepare-blocked)
+
+### Validation
+
+- `check_devguard_bundle.py`, `run_skillopt_judge.py --dataset all`, `simulate_scenarios.py` — all pass
+- Fresh-agent benchmark: **21/21** (2026-06-19); see `docs/REFINEMENT_BASELINE.md`
+
+## v0.2.1 - 2026-06-19
+
+### Added
+
+- **Socratic inquiry** module (`skills/05-socratic-inquiry`, `references/socratic-inquiry-core.md`)
+- Smart gate: auto-trigger when Task Profile is ambiguous; skip for `LITE` execute whitelist matches
+- `Inquiry Note` template and `INQUIRY` execution status
+- Chain integration: `socratic-inquiry?` before project understanding on default feature, UI, bugfix, and refactor chains
+
 ## v0.2.0 - 2026-06-19
 
 ### Added
@@ -30,7 +56,6 @@ All notable changes to DevGuard will be documented in this file.
 
 - Run `python scripts/check_devguard_bundle.py --skill-dir .`
 - Run `python scripts/run_skillopt_judge.py --skill-dir . --dataset all`
-- Fresh-agent benchmark pass rate: run manually or in CI when available
 
 ## v0.1.0 - 2026-06-14
 

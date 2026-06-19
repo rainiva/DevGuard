@@ -1,8 +1,8 @@
 ---
 name: devguard-ui-implementation
-description: Internal DevGuard module for UI implementation, visual flow changes, state coverage, real binding, responsive behavior, accessibility, and UI review pairing.
+description: Stub. See devguard-module-registry.md and references/ui-implementation-core.md.
 ---
 
 # DevGuard UI Implementation
 
-Use this module through the external `DevGuard` skill. Read `references/ui-implementation-core.md` and mirror review with `references/ui-review-extension.md`.
+Canonical: [references/ui-implementation-core.md](../references/ui-implementation-core.md). Registry: [devguard-module-registry.md](../references/devguard-module-registry.md).

@@ -1,8 +1,8 @@
 ---
 name: devguard-release-check
-description: Internal DevGuard module for packaging, rollout, install, migration, deployment, rollback, degradation, observability, and go-live readiness checks.
+description: Stub. See devguard-module-registry.md and references/release-check-core.md.
 ---
 
 # DevGuard Release Check
 
-Use this module through the external `DevGuard` skill. Read `references/release-check-core.md` and do not treat build success as release readiness.
+Canonical: [references/release-check-core.md](../references/release-check-core.md). Registry: [devguard-module-registry.md](../references/devguard-module-registry.md).

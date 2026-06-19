@@ -5,6 +5,8 @@ Compact definitions for outward disclosure, routing, and gate vocabulary. Canoni
 | Term | Meaning | Canonical reference |
 |---|---|---|
 | Task Profile | Exploratory pre-contract snapshot: problem, outcome, non-goals, touched surfaces, task family | [task-routing.md](task-routing.md) |
+| Socratic Inquiry | Structured one-question-per-turn clarification when Task Profile ambiguity blocks safe routing or contract freeze | [socratic-inquiry-core.md](socratic-inquiry-core.md) |
+| Inquiry Note | T2 outward block surfacing the current Socratic question while `Status: INQUIRY` | [report-templates.md](report-templates.md) |
 | Task Contract | Frozen execution slice: allowed scope, tests, acceptance, constraints — tighter than impact analysis | [report-templates.md](report-templates.md) |
 | Task Contract Summary (TCS) | T1 outward contract block: Goal, Scope, Tests, Acceptance, optional one-line Official constraint | [report-templates.md](report-templates.md) |
 | Impact Analysis | Change-impact judgment after project understanding and official docs check; not a substitute for Contract | [impact-analysis-core.md](impact-analysis-core.md) |
