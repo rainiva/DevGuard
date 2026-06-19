@@ -2,6 +2,27 @@
 
 All notable changes to DevGuard will be documented in this file.
 
+## v0.3.0-refined - 2026-06-19
+
+### Changed (P7)
+
+- **Three-phase workflow**: Orient → Prepare → Act (`references/control-plane-core.md`)
+- **Single entry**: SKILL.md authoritative; README trimmed to install + phase diagram
+- **Single lookup**: `references/devguard-lookup.md` replaces scattered runtime tables
+- **Module registry**: `references/devguard-module-registry.md`; 12 wrapper skills stubbed (3 thin wrappers kept)
+- **T3 externalized**: `references/report-templates-detailed.md`; main `report-templates.md` ≤280 lines
+- **Scripts**: `validate_outward_packet.py`, `sync_devguard_install.py`
+- **Benchmark**: +4 P7 scenarios (socratic, lite-skip, three-phase, prepare-blocked)
+
+## v0.2.1 - 2026-06-19
+
+### Added
+
+- **Socratic inquiry** module (`skills/05-socratic-inquiry`, `references/socratic-inquiry-core.md`)
+- Smart gate: auto-trigger when Task Profile is ambiguous; skip for `LITE` execute whitelist matches
+- `Inquiry Note` template and `INQUIRY` execution status
+- Chain integration: `socratic-inquiry?` before project understanding on default feature, UI, bugfix, and refactor chains
+
 ## v0.2.0 - 2026-06-19
 
 ### Added

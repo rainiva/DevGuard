@@ -135,6 +135,7 @@ Use this matrix to decide which pre-execution gates are required before coding, 
 
 | Gate | S0 | LITE execute | S1 / FAST | S2 / STANDARD | S3+ / STRICT |
 |---|---|---|---|---|---|
+| Socratic Inquiry | conditional | no | conditional | conditional | conditional |
 | Project Understanding | no | no | light / conditional | yes | deep |
 | Official Docs Check | no | no | conditional | conditional | yes |
 | Impact Analysis | no | no | light | yes | deep |
@@ -143,7 +144,8 @@ Use this matrix to decide which pre-execution gates are required before coding, 
 
 Gate notes:
 
-- `S0` and consultative work skip all coding gates.
+- **Socratic Inquiry** runs after routing when the smart gate fires. See [socratic-inquiry-core.md](socratic-inquiry-core.md). Skip when `LITE` execute whitelist matches or Task Profile is already unambiguous. While `Status: INQUIRY`, do not freeze Task Contract or start required project understanding.
+- `S0` consultative work may require Socratic inquiry when deliverable shape is unclear; it still skips coding gates.
 - `LITE execute` uses **Micro Slice** (Goal / Edit / Done) inside `Execution Summary` instead of a separate `Task Contract Summary`. No project understanding, impact analysis, or official docs when the whitelist matches.
 - `LITE` does **not** apply to `bugfix`; bug fixes require at least `FAST` and the Evidence Gate.
 - `S1 / FAST` still requires a compact Task Contract before code changes, but may use a minimal reproduction instead of a full failing test when risk is truly local and the task family is **not** `bugfix`.
@@ -153,15 +155,15 @@ Gate notes:
 
 ## Default Skill Chains
 
-`official-docs-check?` means route the check only when the Official Docs Check Gate says platform, framework, SDK, host, control-template, lifecycle, threading, permission, installer, component-library, or design constraints may govern the task. `task-contract-freeze` means freeze the Task Contract from `references/report-templates.md` before TDD or execution.
+`socratic-inquiry?` means run Socratic inquiry only when the Socratic Gate in [socratic-inquiry-core.md](socratic-inquiry-core.md) fires. `official-docs-check?` means route the check only when the Official Docs Check Gate says platform, framework, SDK, host, control-template, lifecycle, threading, permission, installer, component-library, or design constraints may govern the task. `task-contract-freeze` means freeze the Task Contract from `references/report-templates.md` before TDD or execution.
 
-- New feature: `codegraph-project-understanding -> official-docs-check? -> impact-analysis -> task-contract-freeze -> tdd-workflow -> daily-development -> code-review`
-- UI implementation: `codegraph-project-understanding -> official-docs-check? -> impact-analysis -> task-contract-freeze -> tdd-workflow -> ui-implementation -> code-review`
-- Bug fix: `codegraph-project-understanding -> official-docs-check? -> bug-fix(diagnosis-only) -> impact-analysis -> task-contract-freeze -> tdd-workflow -> bug-fix(minimal-repair) -> code-review`
-- WPF or desktop UI bug: `codegraph-project-understanding -> official-docs-check? -> bug-fix(diagnosis-only) -> compatibility-impact-analysis -> impact-analysis -> task-contract-freeze -> tdd-workflow -> ui-implementation -> bug-fix(regression-verification) -> code-review`
-- Performance-sensitive change: `codegraph-project-understanding -> official-docs-check? -> impact-analysis -> performance-impact-analysis -> task-contract-freeze -> tdd-workflow -> daily-development -> performance-review-core -> code-review`
-- Refactor or migration: `codegraph-project-understanding -> official-docs-check? -> impact-analysis -> migration-refactor -> task-contract-freeze -> tdd-workflow -> code-review -> release-check`
-- AI or LLM feature: `codegraph-project-understanding -> official-docs-check? -> impact-analysis -> task-contract-freeze -> ai-llm-feature -> tdd-workflow -> code-review`
+- New feature: `socratic-inquiry? -> codegraph-project-understanding -> official-docs-check? -> impact-analysis -> task-contract-freeze -> tdd-workflow -> daily-development -> code-review`
+- UI implementation: `socratic-inquiry? -> codegraph-project-understanding -> official-docs-check? -> impact-analysis -> task-contract-freeze -> tdd-workflow -> ui-implementation -> code-review`
+- Bug fix: `socratic-inquiry? -> codegraph-project-understanding -> official-docs-check? -> bug-fix(diagnosis-only) -> impact-analysis -> task-contract-freeze -> tdd-workflow -> bug-fix(minimal-repair) -> code-review`
+- WPF or desktop UI bug: `socratic-inquiry? -> codegraph-project-understanding -> official-docs-check? -> bug-fix(diagnosis-only) -> compatibility-impact-analysis -> impact-analysis -> task-contract-freeze -> tdd-workflow -> ui-implementation -> bug-fix(regression-verification) -> code-review`
+- Performance-sensitive change: `socratic-inquiry? -> codegraph-project-understanding -> official-docs-check? -> impact-analysis -> performance-impact-analysis -> task-contract-freeze -> tdd-workflow -> daily-development -> performance-review-core -> code-review`
+- Refactor or migration: `socratic-inquiry? -> codegraph-project-understanding -> official-docs-check? -> impact-analysis -> migration-refactor -> task-contract-freeze -> tdd-workflow -> code-review -> release-check`
+- AI or LLM feature: `socratic-inquiry? -> codegraph-project-understanding -> official-docs-check? -> impact-analysis -> task-contract-freeze -> ai-llm-feature -> tdd-workflow -> code-review`
 - Release or go-live: `release-check`
 - Repeated failed repair: `codegraph-project-understanding -> official-docs-check? -> failure-retrospective-core -> bug-fix(diagnosis-only) -> impact-analysis -> dynamic-reroute-core -> task-contract-freeze -> tdd-workflow -> bug-fix(minimal-repair) -> code-review`
 - LITE daily micro-edit: `task-contract-freeze(micro-slice) -> daily-development`
@@ -195,6 +197,25 @@ Before execution, turn the request into a compact Task Profile that states:
 5. the task family, such as bugfix, UI, feature, refactor, performance, or release
 
 Task Profile is exploratory. It prepares project understanding, impact analysis, and Task Contract generation, but it does not freeze execution scope yet.
+
+When the Socratic Gate fires, refine Task Profile through [socratic-inquiry-core.md](socratic-inquiry-core.md) before project understanding or contract freeze.
+
+## Socratic Inquiry Gate
+
+Default to **skip** Socratic inquiry when intent is already concrete enough to route safely.
+
+Require Socratic inquiry when any of these is true:
+
+1. success criteria are missing, vague, or untestable
+2. multiple materially different interpretations remain open
+3. scope boundary would change routing or contract shape
+4. conflicting constraints lack an explicit priority rule
+5. non-goals matter but cannot be inferred safely
+6. `S0` consultative work where deliverable shape is still unclear
+
+Always skip when `LITE` execute whitelist fully matches.
+
+While inquiry is active, set outward `Status: INQUIRY`, emit `Inquiry Note`, and do not freeze Task Contract.
 
 ## Project Understanding Gate
 
@@ -254,6 +275,7 @@ Expand to `detailed` only when one of these is true:
 ## Implemented Route Targets
 
 - `task-router`: `skills/00-task-router/SKILL.md` and `references/task-routing.md`
+- `socratic-inquiry?`: optional `skills/05-socratic-inquiry/SKILL.md` and `references/socratic-inquiry-core.md`, loaded only when the Socratic Inquiry Gate requires it
 - `codegraph-project-understanding`: `skills/12-codegraph-project-understanding/SKILL.md` and `references/codegraph-project-understanding.md`
 - `official-docs-check?`: optional `skills/13-official-docs-check/SKILL.md` and `references/official-docs-check.md`, loaded only when the Official Docs Check Gate requires it
 - `impact-analysis`: `skills/10-impact-analysis/SKILL.md` and `references/impact-analysis-core.md`

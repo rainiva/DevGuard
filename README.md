@@ -29,67 +29,20 @@ DevGuard 主要解决这几类问题：
 
 ## Architecture Overview
 
-DevGuard 当前由 6 个层次组成：
+DevGuard 对外只有 **三相** 工作流（详见 [SKILL.md](SKILL.md) 与 [control-plane-core.md](references/control-plane-core.md)）：
 
-1. 入口层：定义 DevGuard 的外部入口、默认提示词和总职责
-2. 路由层：识别任务类型、风险、复杂度、执行模式和技能链
-3. 规则加载层：按 `Meta -> Core -> Extensions -> Project Rules -> Playbooks -> Review Extensions` 逐层加载
-4. 分析门禁层：项目结构理解、官方文档约束确认、Impact Analysis、Task Contract 冻结
-5. 执行层：TDD、日常开发、UI、Bug Fix、迁移重构、AI/LLM、发布检查
-6. 审查与控制层：Code Review、Review Extensions、Dynamic Reroute、Failure Retrospective
+1. **Orient（定向）**：路由、苏格拉底追问、规则加载计划、ES/TCS
+2. **Prepare（备跑）**：项目理解 → 官方文档? → 影响分析 → Contract 冻结（默认不外显）
+3. **Act（执行）**：TDD → 领域执行 → 审查 → 完成摘要
 
-```mermaid
-flowchart TB
-  A["入口层<br/>SKILL.md / README.md / agents/openai.yaml"]
-  B["路由层<br/>Task Router"]
-  C["规则加载层<br/>Rule Loading / Rule Disclosure"]
-  D["分析门禁层<br/>CodeGraph Project Understanding<br/>Official Docs Check (Context7 / 原文核验)<br/>Impact Analysis<br/>Task Contract Freeze"]
-  E["执行层<br/>TDD / Daily Development / UI / Bug Fix<br/>Migration / AI LLM / Release"]
-  F["审查与控制层<br/>Code Review / Review Extensions<br/>Dynamic Reroute / Failure Retrospective"]
-  G["资产层<br/>references / shared / playbooks<br/>project-rules / scripts"]
-
-  A --> B
-  B --> C
-  C --> D
-  D --> E
-  E --> F
-  B --> G
-  C --> G
-  D --> G
-  E --> G
-  F --> G
-```
-
-## Runtime Flow
-
-DevGuard 的真实运行顺序不是“读完所有规则后直接写代码”，而是下面这条受门禁控制的链路：
+查表：[devguard-lookup.md](references/devguard-lookup.md)。模块注册表：[devguard-module-registry.md](references/devguard-module-registry.md)。
 
 ```mermaid
-flowchart TD
-  A["用户任务 / Use $devguard"] --> B["Task Router<br/>任务类型 / 风险 / 复杂度 / 执行模式 / 技能链"]
-  B --> C["Rule Loading<br/>按需分批加载最小规则集"]
-  C --> D["默认外显输出<br/>Execution Summary"]
-  D --> E{"是否涉及代码、结构、行为、数据或 UI 变更"}
-  E -- "否" --> M["轻量链路<br/>review / release / consult"]
-  E -- "是" --> F["CodeGraph Project Understanding"]
-  F --> G{"是否受平台 / 框架 / SDK / 宿主约束"}
-  G -- "是" --> H["Official Docs Check"]
-  G -- "否" --> I["Impact Analysis"]
-  H --> I
-  I --> J["Task Contract Freeze"]
-  J --> K["TDD Red"]
-  K --> L["执行技能链<br/>Daily Dev / UI / Bug Fix / Migration / AI LLM"]
-  L --> N["Green / Refactor / Regression Verification"]
-  N --> O["Code Review<br/>含 Review Extensions / Project Review Rules"]
-  O --> P{"是否进入发布阶段"}
-  P -- "是" --> Q["Release Check"]
-  P -- "否" --> R["完成"]
-  Q --> R
-
-  B -. "高风险但无异常" .-> S["Risk Note"]
-  C -. "缺规则 / 路径异常 / 无法解释" .-> T["Exception Note 或 BLOCKED"]
-  L -. "同一问题两次失败" .-> U["Failure Retrospective + Dynamic Reroute"]
-  U --> B
+flowchart LR
+  A[SKILL.md 唯一入口] --> B[Orient]
+  B --> C[Prepare]
+  C --> D[Act]
+  D -.事实变化.-> B
 ```
 
 ## Routing And Loading

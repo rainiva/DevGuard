@@ -42,7 +42,7 @@
 | references/ file count | 36 | 37 | — | yes (+glossary) |
 | shared/ duplicate groups | 4 | 0 (stubs only) | 0 | yes |
 | wrapper SKILL total lines | 126 | 126 | — | yes |
-| benchmark count | 12 | 12 | >= 12 | yes |
+| benchmark count | 12 | 18 | >= 16 | yes (P7) |
 | held-out count | 3 | 3 | >= 3 | yes |
 | glossary terms | 0 | 31 | >= 15 | yes |
 | benchmark pass rate (schema) | — | 100% | 100% | yes |

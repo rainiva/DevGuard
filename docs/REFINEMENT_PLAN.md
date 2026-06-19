@@ -6,7 +6,7 @@
 | 创建日期 | 2026-06-19 |
 | 适用范围 | devguard/ 技能包本体（不含具体业务项目规则） |
 | 前置批次 | Batch 1-6（控制面、分层加载、摘要披露已实现） |
-| 关联文档 | references/batch-roadmap.md、references/forward-testing.md、skillopt/benchmark.jsonl |
+| 关联文档 | references/batch-roadmap.md、references/forward-testing.md、skillopt/benchmark.jsonl、[REFINEMENT_PLAN_P7.md](REFINEMENT_PLAN_P7.md)（P7 入口/层级压缩） |
 
 ---
 

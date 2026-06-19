@@ -1,5 +1,9 @@
 # Rule Disclosure Index
 
+> **Workflow authority**: [SKILL.md](../SKILL.md) (Orient → Prepare → Act). Runtime lookup: [devguard-lookup.md](devguard-lookup.md).
+
+Use this index when you need rule paths beyond the lookup table.
+
 ## Metadata
 
 - Layer: shared
@@ -38,6 +42,7 @@ Use `Layer` for rule-loading taxonomy and `Wrapper path` for the internal skill 
 | Rule | Wrapper path | Path | Layer | Metadata trigger | Summary |
 |---|---|---|---|---|---|
 | task-router | skills/00-task-router/SKILL.md | references/task-routing.md | meta | any routed task | classify task type, risk, complexity, mode, and skill chain |
+| socratic-inquiry | skills/05-socratic-inquiry/SKILL.md | references/socratic-inquiry-core.md | pre-execution | Task Profile ambiguity blocks safe routing or contract freeze | refine problem, outcome, non-goals, surfaces, and success criteria through one question per turn |
 | rule-loading | n/a | references/rule-loading.md | meta | any execution task | decide minimal loaded set, deferred rules, disclosure mode, project-understanding gating, and Task Contract gating |
 | codegraph-project-understanding | skills/12-codegraph-project-understanding/SKILL.md | references/codegraph-project-understanding.md | pre-execution | code change larger than tiny known local edit | locate entry points, call chains, similar implementations, and impact surfaces before impact analysis |
 | official-docs-check | skills/13-official-docs-check/SKILL.md | references/official-docs-check.md | pre-execution | platform, framework, SDK, host, control-template, system-API, or design-guideline constraints may matter | confirm official constraints before impact analysis and Task Contract freeze |

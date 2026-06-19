@@ -4,17 +4,59 @@
 from __future__ import annotations
 
 import argparse
+import json
 import re
 import subprocess
 import sys
 from pathlib import Path
 
 
+P7_MAX_SKILL_LINES = 65
+P7_MAX_REPORT_TEMPLATES_LINES = 280
+P7_MAX_LOOKUP_LINES = 200
+P7_MAX_ACTIVE_WRAPPER_LINES = 12
+P7_ACTIVE_WRAPPER_ALLOWLIST = {
+    "skills/00-task-router/SKILL.md",
+    "skills/12-codegraph-project-understanding/SKILL.md",
+    "skills/15-tdd-workflow/SKILL.md",
+}
+P7_REQUIRED_FILES = [
+    "docs/REFINEMENT_PLAN_P7.md",
+    "references/control-plane-core.md",
+    "references/devguard-module-registry.md",
+    "references/devguard-lookup.md",
+    "references/report-templates-detailed.md",
+    "scripts/validate_outward_packet.py",
+    "scripts/sync_devguard_install.py",
+]
+P7_SKILL_PHASES = ["Orient", "Prepare", "Act"]
+P7_REPORT_TEMPLATE_MAIN_SECTIONS = [
+    "## Output Tier Model",
+    "## Summary Output Discipline",
+    "## Record Block Discipline",
+    "## Execution Summary",
+    "## Risk Note",
+    "## Inquiry Note",
+    "## Exception Note",
+    "## Completion Summary",
+    "## Review Summary",
+    "## Task Contract Summary",
+]
+P7_REPORT_TEMPLATE_DETAILED_SECTIONS = [
+    "## Skill Routing Decision",
+    "## Rule-Loading Manifest",
+    "## CodeGraph Project Understanding Report",
+    "## Task Contract",
+    "## Development Completion Report",
+    "## Review Report",
+]
+
 EXPECTED_FILES = [
     "SKILL.md",
     ".gitignore",
     "agents/openai.yaml",
     "references/task-routing.md",
+    "references/socratic-inquiry-core.md",
     "references/rule-loading.md",
     "references/rule-disclosure-index.md",
     "references/shared-guardrails.md",
@@ -64,6 +106,7 @@ EXPECTED_FILES = [
     "shared/severity-levels.md",
     "shared/report-templates.md",
     "skills/00-task-router/SKILL.md",
+    "skills/05-socratic-inquiry/SKILL.md",
     "skills/10-impact-analysis/SKILL.md",
     "skills/12-codegraph-project-understanding/SKILL.md",
     "skills/13-official-docs-check/SKILL.md",
@@ -105,26 +148,11 @@ REPORT_TEMPLATE_SECTIONS = [
     "## Record Block Discipline",
     "## Execution Summary",
     "## Risk Note",
+    "## Inquiry Note",
     "## Exception Note",
+    "## Task Contract Summary",
     "## Completion Summary",
     "## Review Summary",
-    "## Official Docs Check Summary",
-    "## Official Docs Focused Expansion",
-    "## Focused Expansion Discipline",
-    "## Routing Summary",
-    "## Routing Focused Expansion",
-    "## Rule-Loading Summary",
-    "## Rule-Loading Exception",
-    "## Rule-Loading Risk Notes",
-    "## Rule-Loading Manifest",
-    "## Project Understanding Summary",
-    "## Project Understanding Focused Expansion",
-    "## CodeGraph Project Understanding Report",
-    "## Official Docs Check Report",
-    "## Strict Project Understanding Additions",
-    "## Impact Analysis Focused Expansion",
-    "## Task Contract Focused Expansion",
-    "## Review Verdict Mapping",
 ]
 SEVERITY_LEVELS_SECTIONS = ["## Metadata", "## Summary", "## Review Verdict Mapping", "## Full Rule"]
 CODEGRAPH_UNDERSTANDING_SECTIONS = ["## Metadata", "## Summary", "## Full Rule"]
@@ -373,14 +401,6 @@ WRAPPER_DISCLOSURE_REQUIRED_PHRASES = {
         "Keep that record internal by default",
         "Do not emit a separate `Project Understanding Summary` outward",
     ],
-    "skills/10-impact-analysis/SKILL.md": [
-        "Keep that record internal by default",
-        "Do not emit a separate `Impact Analysis Summary` outward",
-    ],
-    "skills/13-official-docs-check/SKILL.md": [
-        "Keep the official-docs record internal by default",
-        "do not emit a separate `Official Docs Check Summary` outward",
-    ],
 }
 ALLOWED_RULE_LAYERS = {
     "meta",
@@ -545,11 +565,22 @@ def main() -> int:
                 invalid.append(f"references/severity-levels.md missing {section}")
 
     report_templates = skill_dir / "references/report-templates.md"
+    detailed_templates = skill_dir / "references/report-templates-detailed.md"
+    report_templates_content = ""
     if report_templates.exists():
         content = report_templates.read_text(encoding="utf-8")
+        report_templates_content = content
         for section in REPORT_TEMPLATE_SECTIONS:
             if section not in content:
                 invalid.append(f"references/report-templates.md missing {section}")
+
+    detailed_content = (
+        detailed_templates.read_text(encoding="utf-8") if detailed_templates.exists() else ""
+    )
+    if report_templates_content:
+        for phrase in REPORT_TEMPLATE_REQUIRED_PHRASES:
+            if phrase not in report_templates_content and phrase not in detailed_content:
+                invalid.append(f"references/report-templates missing structural-tool field: {phrase}")
 
     codegraph_understanding = skill_dir / "references/codegraph-project-understanding.md"
     if codegraph_understanding.exists():
@@ -573,9 +604,6 @@ def main() -> int:
 
     skill_md = skill_dir / "SKILL.md"
     skill_content = skill_md.read_text(encoding="utf-8") if skill_md.exists() else ""
-    report_templates_content = (
-        report_templates.read_text(encoding="utf-8") if report_templates.exists() else ""
-    )
     rule_loading_content = rule_loading.read_text(encoding="utf-8") if rule_loading.exists() else ""
     task_routing = skill_dir / "references/task-routing.md"
     task_routing_content = task_routing.read_text(encoding="utf-8") if task_routing.exists() else ""
@@ -762,9 +790,6 @@ def main() -> int:
         invalid.append("references/report-templates.md missing standalone record-block discipline")
     if "standalone record blocks" not in rule_loading_content:
         invalid.append("references/rule-loading.md missing standalone record-block discipline")
-    for phrase in REPORT_TEMPLATE_REQUIRED_PHRASES:
-        if phrase not in report_templates_content:
-            invalid.append(f"references/report-templates.md missing structural-tool field: {phrase}")
 
     if "Do not let `STRICT` execution mode automatically force full outward disclosure" not in task_routing_content:
         invalid.append("references/task-routing.md missing STRICT disclosure decoupling rule")
@@ -1187,6 +1212,123 @@ def main() -> int:
         for ignored_path in [".codegraph/", "graphify-out/", "skillopt/"]:
             if ignored_path not in gitignore_content:
                 invalid.append(f".gitignore missing generated artifact ignore: {ignored_path}")
+
+    for rel_path in P7_REQUIRED_FILES:
+        full_path = skill_dir / rel_path
+        exists = full_path.exists()
+        print(f"{'OK   ' if exists else 'MISS '} {rel_path}")
+        if not exists:
+            missing.append(rel_path)
+
+    if skill_md.exists():
+        skill_lines = len(skill_content.splitlines())
+        if skill_lines > P7_MAX_SKILL_LINES:
+            invalid.append(f"SKILL.md has {skill_lines} lines; P7 max is {P7_MAX_SKILL_LINES}")
+        for phase in P7_SKILL_PHASES:
+            if phase not in skill_content:
+                invalid.append(f"SKILL.md missing P7 phase: {phase}")
+        if "control-plane-core.md" not in skill_content:
+            invalid.append("SKILL.md missing control-plane-core.md link")
+        if "devguard-lookup.md" not in skill_content:
+            invalid.append("SKILL.md missing devguard-lookup.md link")
+        if "Default Workflow" in skill_content and "1. Route with" in skill_content:
+            invalid.append("SKILL.md still uses legacy 8-step Default Workflow")
+
+    readme_md = skill_dir / "README.md"
+    readme_content = readme_md.read_text(encoding="utf-8") if readme_md.exists() else ""
+    if readme_content:
+        if "## Runtime Flow" in readme_content:
+            invalid.append("README.md still contains legacy Runtime Flow section")
+        if "control-plane-core.md" not in readme_content:
+            invalid.append("README.md missing control-plane-core.md link")
+
+    if report_templates.exists():
+        template_lines = len(report_templates_content.splitlines())
+        if template_lines > P7_MAX_REPORT_TEMPLATES_LINES:
+            invalid.append(
+                f"references/report-templates.md has {template_lines} lines; "
+                f"P7 max is {P7_MAX_REPORT_TEMPLATES_LINES}"
+            )
+        for section in P7_REPORT_TEMPLATE_MAIN_SECTIONS:
+            if section not in report_templates_content:
+                invalid.append(f"references/report-templates.md missing P7 main section: {section}")
+        if "report-templates-detailed.md" not in report_templates_content:
+            invalid.append("references/report-templates.md missing link to report-templates-detailed.md")
+        for section in [
+            "## Skill Routing Decision",
+            "## Rule-Loading Manifest",
+            "## Development Completion Report",
+        ]:
+            if section in report_templates_content:
+                invalid.append(
+                    f"references/report-templates.md still contains T3 section in main file: {section}"
+                )
+
+    detailed_templates = skill_dir / "references/report-templates-detailed.md"
+    detailed_content = (
+        detailed_templates.read_text(encoding="utf-8") if detailed_templates.exists() else ""
+    )
+    for section in P7_REPORT_TEMPLATE_DETAILED_SECTIONS:
+        if detailed_content and section not in detailed_content:
+            invalid.append(f"references/report-templates-detailed.md missing {section}")
+
+    lookup_md = skill_dir / "references/devguard-lookup.md"
+    if lookup_md.exists():
+        lookup_lines = len(lookup_md.read_text(encoding="utf-8").splitlines())
+        if lookup_lines > P7_MAX_LOOKUP_LINES:
+            invalid.append(f"references/devguard-lookup.md has {lookup_lines} lines; max {P7_MAX_LOOKUP_LINES}")
+
+    control_plane = skill_dir / "references/control-plane-core.md"
+    if control_plane.exists():
+        cp_content = control_plane.read_text(encoding="utf-8")
+        for phase in P7_SKILL_PHASES:
+            if phase not in cp_content:
+                invalid.append(f"references/control-plane-core.md missing phase: {phase}")
+
+    skills_dir = skill_dir / "skills"
+    if skills_dir.exists():
+        active_wrappers: list[str] = []
+        for wrapper_path in sorted(skills_dir.glob("*/SKILL.md")):
+            rel = wrapper_path.relative_to(skill_dir).as_posix()
+            wrapper_lines = len(wrapper_path.read_text(encoding="utf-8").splitlines())
+            if wrapper_lines > P7_MAX_ACTIVE_WRAPPER_LINES and rel not in P7_ACTIVE_WRAPPER_ALLOWLIST:
+                active_wrappers.append(rel)
+        if len(active_wrappers) > 0:
+            invalid.append(
+                "P7 requires stub wrappers except allowlist; active wrappers: "
+                + ", ".join(active_wrappers)
+            )
+
+    if openai_content and "control-plane-core.md" not in openai_content and "Orient" not in openai_content:
+        invalid.append("agents/openai.yaml must reference P7 three-phase workflow")
+
+    validate_script = skill_dir / "scripts/validate_outward_packet.py"
+    if validate_script.exists():
+        validate_proc = subprocess.run(
+            [sys.executable, str(validate_script), "--self-test"],
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            check=False,
+        )
+        if validate_proc.returncode != 0:
+            invalid.append(
+                "scripts/validate_outward_packet.py self-test failed: "
+                + validate_proc.stderr.strip()
+                + validate_proc.stdout.strip()
+            )
+
+    benchmark_path = skill_dir / "skillopt/benchmark.jsonl"
+    if benchmark_path.exists():
+        benchmark_ids = []
+        for line in benchmark_path.read_text(encoding="utf-8").splitlines():
+            if line.strip():
+                benchmark_ids.append(json.loads(line).get("task_id", ""))
+        for required_id in ["socratic-inquiry", "lite-skip-inquiry", "three-phase-normal"]:
+            if required_id not in benchmark_ids:
+                invalid.append(f"skillopt/benchmark.jsonl missing P7 scenario: {required_id}")
+        if len(benchmark_ids) < 16:
+            invalid.append(f"skillopt/benchmark.jsonl has {len(benchmark_ids)} entries; P7 needs >= 16")
 
     if missing:
         print("\nMissing files:")

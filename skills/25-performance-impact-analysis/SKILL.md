@@ -1,8 +1,8 @@
 ---
 name: devguard-performance-impact-analysis
-description: Internal DevGuard module for performance-sensitive changes involving hot paths, large lists, high-frequency APIs, AI loops, background work, or scale behavior.
+description: Stub. See devguard-module-registry.md and references/performance-impact-core.md.
 ---
 
 # DevGuard Performance Impact Analysis
 
-Use this module through the external `DevGuard` skill. Read `references/performance-impact-core.md` and pair review with `references/performance-review-extension.md` or `references/performance-review-core.md`.
+Canonical: [references/performance-impact-core.md](../references/performance-impact-core.md). Registry: [devguard-module-registry.md](../references/devguard-module-registry.md).
