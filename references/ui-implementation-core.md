@@ -15,7 +15,8 @@ Translate a UI request into a real interface with correct hierarchy, states, and
 5. Enumerate UI states: loading, empty, error, success, disabled, and permission-limited as applicable.
 6. Bind visible actions to real behavior.
 7. Check responsive or window-fit behavior.
-8. Prepare UI acceptance notes for review.
+8. Define at least one verification path that exercises the real user operation flow.
+9. Prepare UI acceptance notes for review.
 
 ## Guardrails
 
@@ -24,6 +25,7 @@ Translate a UI request into a real interface with correct hierarchy, states, and
 - Do not leave important states implicit.
 - Do not add style weight where hierarchy and spacing should solve the problem.
 - Do not drift away from target-platform design guidelines without an explicit reason.
+- Do not claim UI completion using only internal methods, functions, interfaces, or ideal-path checks when the acceptance criteria are user-visible.
 - If the design intentionally deviates from platform guidance, explain the reason, replacement basis, accessibility impact, consistency impact, and whether extra UI review is needed.
 
 ## Required Output
@@ -36,3 +38,4 @@ Capture:
 4. responsive or layout risks
 5. platform-design constraints or justified deviations
 6. accessibility or usability concerns
+7. real user operation paths that were verified

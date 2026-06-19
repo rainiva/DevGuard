@@ -7,11 +7,12 @@ Use this reference to decide what to load now, what to defer, and how to stay sm
 Load in this order:
 
 1. Meta rules
-2. Core skill
-3. Extensions
-4. Project rules
-5. Playbooks
-6. Review extensions
+2. Pre-execution gates
+3. Execution core
+4. Extensions
+5. Project rules
+6. Playbooks
+7. Review extensions
 
 ## Loading Principles
 
@@ -25,8 +26,9 @@ Load in this order:
 
 ## What Each Layer Should Contain
 
-- Meta rules: routing principle, project-understanding requirement, official-docs-check requirement, TDD floor, evidence rules, blocking floor, rule-loading output requirement, Task Contract requirement, dynamic reroute requirement.
-- Core skill: stable process for the selected task category.
+- Meta rules: routing principle, disclosure policy, rule-loading output requirement, dynamic reroute requirement, and other global decision policy.
+- Pre-execution gates: project understanding, official-docs check, impact analysis, TDD setup, Task Contract freeze, and blocking-floor checks required before execution.
+- Execution core: stable process for the selected implementation, repair, release, review, or refactor lane.
 - Extensions: stack-specific or scenario-specific requirements.
 - Project rules: project facts, business boundaries, UI rules, prohibited actions, acceptance constraints.
 - Playbooks: focused troubleshooting or handling instructions for a concrete issue type.
@@ -35,6 +37,8 @@ Load in this order:
 ## Loading Budgets
 
 Use these as a pressure check, not as a hard mechanical cap.
+
+Meta rules and mandatory pre-execution gates do not consume the execution-core budget. Count them separately so routing safety does not appear to compete with implementation-lane rules.
 
 ### FAST
 
@@ -59,6 +63,8 @@ If you exceed the usual budget, explain:
 1. Why the extra load is necessary now.
 2. Which rules remain deferred.
 3. What risk would exist without the additional load.
+
+If the extra load is justified, mark the task `ALLOW_WITH_WARNINGS` and use focused expansion for the budget overrun. If the extra load cannot be justified, mark the task `BLOCKED` until the rule set is narrowed or the missing rationale is supplied.
 
 ## Deferred Loading
 
@@ -126,13 +132,15 @@ Use the summary as the base, then expand only the risky or anomalous rule-loadin
 Use this when one of these is true and the user did not explicitly ask for a full manifest:
 
 1. complexity is `S3` or `S4`
-2. the task involves high-risk operations such as release, migration, auth, payments, or data migration
-3. a required rule appears missing
-4. the wrong project rules were loaded
-5. a rule path does not exist or cannot be confirmed
-6. loaded rules do not match the task type
-7. a high-risk task lacks a required specialized rule
-8. you cannot explain why a rule was loaded or deferred
+2. execution mode is `STRICT`
+3. the task involves high-risk operations such as release, migration, auth, payments, or data migration
+4. a required rule appears missing
+5. the wrong project rules were loaded
+6. a rule path does not exist or cannot be confirmed
+7. loaded rules do not match the task type
+8. a high-risk task lacks a required specialized rule
+9. the rule-loading budget is exceeded
+10. you cannot explain why a rule was loaded or deferred
 
 In focused-expansion mode:
 
@@ -159,6 +167,8 @@ Rule anomalies: Execution Summary + Exception Note + Task Contract Summary when 
 Debug, verbose, audit, or full-manifest tasks: canonical full manifest
 ```
 
+Stage summaries are internal records by default. In normal summary mode, do not emit `Project Understanding Summary`, `Impact Analysis Summary`, or `Official Docs Check Summary` as peer outward blocks. Surface them only when they contain a blocker, anomaly, implementation-changing official constraint, or risk that cannot fit in `Risk Note` or `Exception Note`.
+
 ## Relationship To Task Contract
 
 Rule-loading output answers "which rules are active now and may we proceed."
@@ -167,7 +177,7 @@ Official docs check answers "what do the platform, framework, SDK, host, or desi
 Impact analysis answers "what might this task affect."
 Task Contract answers "what is frozen for this execution slice."
 
-Normal tasks should see compact summaries across these stages by default. Expand routing, project-understanding, impact-analysis, or Task Contract output only when traceability, explicit user mode, or higher risk actually requires the larger form. Keep `Task Contract Summary` visible by default once execution is being prepared.
+Normal tasks should see only the compact outward packet by default. Keep project-understanding, official-docs-check, and impact-analysis records internal unless traceability, explicit user mode, blocker, anomaly, or implementation-changing risk actually requires a visible focused note. Keep `Task Contract Summary` visible by default once execution is being prepared.
 
 Do not skip from routing straight into implementation. The normal execution sequence is:
 

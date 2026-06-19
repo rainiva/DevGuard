@@ -5,4 +5,4 @@ description: Internal DevGuard module for impact analysis before non-trivial imp
 
 # DevGuard Impact Analysis
 
-Use this module through the external `DevGuard` skill. Read `references/impact-analysis-core.md`, assume required project understanding already happened, emit the routed Impact Analysis depth, identify the fan-out impact and risk surface, and hand the resulting scope decisions into the Task Contract. Add domain extensions only when the current task hits them.
+Use this module through the external `DevGuard` skill. Read `references/impact-analysis-core.md`, assume required project understanding already happened, establish the impact-analysis record at the routed depth, identify the fan-out impact and risk surface, and hand the resulting scope decisions into the Task Contract. Keep that record internal by default. Do not emit a separate `Impact Analysis Summary` outward unless the route explicitly calls for focused or detailed disclosure, or a blocker, anomaly, reroute trigger, or implementation-changing risk requires it. Add domain extensions only when the current task hits them.

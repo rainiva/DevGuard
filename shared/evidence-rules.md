@@ -1,3 +1,5 @@
-# Evidence Rules
+# Moved
 
-Always distinguish files read, commands run, observed results, static inference, and unverified items. Do not present inference, mock behavior, or expected behavior as verified truth.
+Canonical: [references/shared-guardrails.md](../references/shared-guardrails.md)
+
+This stub exists for backward compatibility. Evidence rules live in the shared guardrails reference.

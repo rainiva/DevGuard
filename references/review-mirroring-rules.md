@@ -30,6 +30,7 @@ Flag review problems when:
 - review ignores a domain-specific risk that implementation was supposed to handle
 - project-specific hard blocks were checked during implementation but not during review
 - the rule-loading output does not explain the implementation-to-review mapping
+- review ignores that implementation silently skipped a repairable structural-tool failure and treated plain-search fallback as equivalent
 - review ignores contract-defined non-goals or out-of-scope boundaries
 
 ## Manifest Guidance

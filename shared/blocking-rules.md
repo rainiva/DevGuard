@@ -1,3 +1,5 @@
-# Blocking Rules
+# Moved
 
-Block when required routing, rule loading, impact analysis, TDD evidence, reproduction evidence, rollback thinking, security boundaries, or project-specific hard blocks are missing.
+Canonical: [references/shared-guardrails.md](../references/shared-guardrails.md)
+
+This stub exists for backward compatibility. Blocking rules live in the shared guardrails reference.

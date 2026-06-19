@@ -6,3 +6,9 @@ __pycache__/
 .coverage
 Thumbs.db
 .DS_Store
+.codegraph/
+graphify-out/
+# Keep regression datasets; ignore local skillopt run artifacts only
+skillopt/*
+!skillopt/benchmark.jsonl
+!skillopt/held-out.jsonl
