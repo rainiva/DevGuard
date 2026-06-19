@@ -20,7 +20,7 @@
 | benchmark count | 4 (expanded to 12 in P0) |
 | held-out count | 0 (expanded to 3 in P0) |
 | REFINEMENT_PLAN.md lines | 583 |
-| benchmark pass rate | pending fresh-agent run |
+| benchmark pass rate | 100% fresh-agent (21/21, 2026-06-19) |
 
 ## Duplicate Path Audit
 
@@ -46,7 +46,7 @@
 | held-out count | 3 | 3 | >= 3 | yes |
 | glossary terms | 0 | 31 | >= 15 | yes |
 | benchmark pass rate (schema) | — | 100% | 100% | yes |
-| benchmark pass rate (fresh agent) | pending | pending | 100% | pending CI/manual |
+| benchmark pass rate (fresh agent) | pending | 100% (21/21) | 100% | yes |
 | bundle check | — | pass | pass | yes |
 
 ## Phase Merge Log
@@ -60,6 +60,7 @@
 | P4 | 2026-06-19 | bundle OK | short prompts, /devguard triggers, Coexistence Rules, description trim |
 | P5 | 2026-06-19 | bundle OK | No-Index Fallback, Official Docs L1/L2/L3, ES Structural tool, TCS Official constraint |
 | P6 | 2026-06-19 | bundle + skillopt OK | glossary 31 terms, CHANGELOG v0.2.0, final baseline |
+| P7 | 2026-06-19 | fresh-agent 21/21 PASS | three-phase control plane, benchmark 18, golden P7 fixtures |
 
 ## P6 Final Validation
 
@@ -80,4 +81,4 @@ Forward-testing Regression Example Set: spot-check against `references/forward-t
 - Refinement complete through P6; hard gates preserved (Contract, evidence, TDD, CodeGraph freshness, disclosure cap)
 - SKILL.md grew from 77 to 94 after P4–P5 entry rules; still 59% below original 158 lines
 - references/ KB target (<=100) not met because tier model, gates, fallback, and glossary add durable reference material
-- Fresh-agent benchmark 100% remains a CI/manual follow-up, not a schema-judge substitute
+- Fresh-agent benchmark 21/21 passed on 2026-06-19 (18 benchmark + 3 held-out); transcripts in `skillopt/fresh-agent-run/` (gitignored)
