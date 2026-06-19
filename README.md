@@ -49,6 +49,7 @@ flowchart LR
 - 路由与执行模式：[task-routing.md](references/task-routing.md)
 - 规则层次与按需加载：[rule-loading.md](references/rule-loading.md)
 - 默认外显：`Execution Summary` + `Task Contract Summary`；高风险 + `Risk Note`；异常 + `Exception Note`
+- `Project Understanding Summary`、`Impact Analysis Summary`、`Official Docs Check Summary` 默认只作为内部记录保留
 - T1/T2 模板：[report-templates.md](references/report-templates.md)；T3 审计模板：[report-templates-detailed.md](references/report-templates-detailed.md)
 - 硬门禁：[shared-guardrails.md](references/shared-guardrails.md)
 
