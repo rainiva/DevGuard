@@ -2,6 +2,36 @@
 
 All notable changes to DevGuard will be documented in this file.
 
+## v0.2.0 - 2026-06-19
+
+### Added
+
+- **`LITE` execution mode** for daily micro-edits: Micro Slice in `Execution Summary`, no separate TCS, `route:lite-daily`, `/devguard lite` trigger
+- Refinement execution plan and baseline docs (`docs/REFINEMENT_PLAN.md`, `docs/REFINEMENT_BASELINE.md`)
+- Skillopt regression datasets (12 benchmark + 3 held-out) and bundle-integrated validation
+- Output Tier Model (T1 / T1b / T2 / T3) with `Completion Summary` and `Review Summary`
+- Primary (12) and Secondary risk tags, Gate Matrix, and eight Named Routes
+- P0 / P1 / P2 layered blocking conditions
+- Unified Minimum Change Constraint and bug-fix Evidence Gate (six items + red line)
+- Coexistence Rules for domain-skill pairing and `/devguard fast|strict|review` short triggers
+- CodeGraph No-Index Fallback (`codegraph_unavailable`, limited read, `ALLOW_WITHOUT_CODEGRAPH`)
+- Official Docs depth levels L1 / L2 / L3 and one-line `Official constraint` in Task Contract Summary
+- `references/glossary.md` core terminology index
+
+### Changed
+
+- `SKILL.md` and `README.md` trimmed and re-indexed; `shared/` paths redirect to `references/`
+- Default outward output remains `Execution Summary` + `Task Contract Summary`; stage summaries internal by default
+- `agents/openai.yaml` default prompt shortened to <= 120 characters
+- Four high-frequency core references use Metadata / Summary / Full Rule structure
+- Dynamic reroute trigger table and outward ES-only update on reroute
+
+### Validation
+
+- Run `python scripts/check_devguard_bundle.py --skill-dir .`
+- Run `python scripts/run_skillopt_judge.py --skill-dir . --dataset all`
+- Fresh-agent benchmark pass rate: run manually or in CI when available
+
 ## v0.1.0 - 2026-06-14
 
 ### Added

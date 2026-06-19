@@ -7,6 +7,8 @@ description: Internal DevGuard module for confirming official platform, framewor
 
 Use this module through the external `DevGuard` skill. Read `references/official-docs-check.md`, assume required project understanding already happened, and confirm the official platform or framework constraints before impact analysis begins.
 
-When available, prefer Context7 or an equivalent official-docs MCP for version-scoped official guidance. When the task is high-risk, disputed, or version-sensitive, verify the original official docs or API reference before treating the official guidance as authoritative.
+When available, prefer Context7 or an equivalent official-docs MCP for L1 scoped summary. Apply L2 original-doc verification for `S3+`, deprecated APIs, permission, installer, or security surfaces. Apply L3 human confirmation for `STRICT` plus release work. Carry at most one `Official constraint` line in Task Contract Summary.
 
-Keep the default outward output compact. Surface only the required summary or focused expansion unless the route explicitly requires detailed or audit-style evidence.
+If Context7 is missing, misconfigured, unreachable, or version-ambiguous, follow the availability, repair, retry, and fallback flow in `references/official-docs-check.md`. Do not degrade immediately, and do not treat a tooling-setup request as an ordinary docs-fallback case.
+
+Keep the default outward output compact. Keep the official-docs record internal by default, and do not emit a separate `Official Docs Check Summary` outward unless the route explicitly requires focused or detailed disclosure, or an official constraint materially changes the Task Contract, blocks work, or explains an anomaly.

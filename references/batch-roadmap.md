@@ -78,9 +78,9 @@ Goal: reduce token cost while preserving rule-loading safety through tiered disc
 Recommended additions:
 
 - default minimal rule-loading summary
-- detailed manifest only for debug, audit, high-risk, or review-evidence cases
+- focused expansion for high-risk or anomaly cases, with detailed manifest reserved for debug, verbose, audit, forward-testing, or formal evidence-capture cases
 - automatic exception expansion when rules are missing, mismatched, or unverifiable
-- script support for `summary`, `full`, and `exception` output formats
+- script support for `summary`, `risk`, `exception`, `rule-summary`, and `full` output formats
 
 Status: implemented in the current slice.
 

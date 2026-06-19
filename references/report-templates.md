@@ -2,6 +2,60 @@
 
 Use these templates as compact output shapes. Fill only the sections relevant to the current stage.
 
+## Output Tier Model
+
+| Tier | Name | Default outward blocks | Trigger |
+|---|---|---|---|
+| T1-lite | lite | `Execution Summary` with embedded `Slice` | `LITE` execute |
+| T1 | summary | `Execution Summary` + `Task Contract Summary` | default |
+| T1b | completion | `Completion Summary` or `LITE Completion Summary` | task finished |
+| T2 | focused-expansion | T1 blocks + `Risk Note` or `Exception Note` (+ optional focused slice) | high-risk or anomaly |
+| T3 | detailed | full routing, manifest, IA, TC, completion/review reports | audit, verbose, forward-test evidence |
+
+Rules:
+
+- T1-lite, T1, and T2 are the only tiers allowed for normal pre-execution outward output.
+- `LITE` preview (no code) uses `Execution Summary` only with no `Slice`.
+- T1b replaces full completion/review reports for ordinary finished work.
+- T3 templates below are canonical for audit mode; do not emit them in T1/T2 unless explicitly requested.
+
+### T1-lite outward set
+
+- `Execution Summary` with embedded `Slice` (Goal / Edit / Done)
+- do **not** emit a separate `Task Contract Summary` block
+
+### T1 outward set
+
+- `Execution Summary`
+- `Task Contract Summary` (4 fields)
+- `Completion Summary` (after execution)
+
+### T2 outward additions
+
+- `Risk Note`
+- `Exception Note`
+- `Official Docs Check Summary` or focused expansion only when official constraints block or reshape the Task Contract
+
+### Internal-only (do not emit as peer T1/T2 blocks)
+
+- `Routing Summary`
+- `Rule-Loading Summary`
+- `Project Understanding Summary`
+- `Impact Analysis Summary`
+- `Official Docs Check Summary` when no blocker or contract-shaping constraint exists
+
+### T3 detailed-only
+
+- `Skill Routing Decision`
+- `Rule-Loading Manifest`
+- `CodeGraph Project Understanding Report`
+- `Official Docs Check Report`
+- `Impact Analysis`
+- `Task Contract` (full)
+- `Development Completion Report`
+- `Bug-Fix Completion Report`
+- `Review Report` (19-section full form)
+
 ## Output Language Contract
 
 - Headings, field labels, literal status values, rule names, paths, code identifiers, and predefined keywords may remain in English.
@@ -13,13 +67,17 @@ Default pre-execution output should stay compact.
 
 In summary mode:
 
-- Default outward packet should normally be `Execution Summary` plus `Task Contract Summary`.
+- Default outward packet should normally be `Execution Summary` plus `Task Contract Summary`, except `LITE execute` uses `Execution Summary` with embedded `Slice` only.
 - Keep each section short, usually within 4-8 lines.
 - Prefer module groups or up to 3 key files over exhaustive file lists.
 - Do not dump full call chains, full test matrices, or long acceptance checklists.
 - Use focused-expansion or detailed templates only when routing explicitly requires expansion.
-- Do not hide `Task Contract Summary` in default mode once execution is being prepared.
+- Do not hide `Task Contract Summary` in default mode once execution is being prepared for `FAST` and above.
+- For `LITE execute`, freeze `Slice` inside `Execution Summary` instead of emitting a separate `Task Contract Summary`.
 - Do not let official-docs reporting break the default minimal outward packet unless risk, anomaly, or explicit detailed mode requires it.
+- Hard default-output cap: summary mode may not emit `Project Understanding Summary`, `Impact Analysis Summary`, or `Official Docs Check Summary` as separate outward blocks by default.
+- Treat those stage summaries as internal records unless they carry a blocker, anomaly, implementation-changing official constraint, or risk that cannot fit in `Risk Note` or `Exception Note`.
+- If a stage record must surface, prefer `Risk Note` or `Exception Note`; otherwise emit at most one ultra-short stage summary and keep unrelated stage details internal.
 
 ## Record Block Discipline
 
@@ -40,6 +98,45 @@ Use for normal tasks by default. This is the default outward summary that replac
 ## Execution Summary
 - Task:
 - Mode:
+- Rules:
+- Status: ALLOW / ALLOW_WITH_WARNINGS / BLOCKED
+- Structural tool:
+- Next:
+```
+
+When structural fallback is active, set `Structural tool` to one compact line, for example:
+
+`CodeGraph unavailable, fallback: limited read`
+
+Other allowed fallback labels: `secondary structural tool`, `ALLOW_WITHOUT_CODEGRAPH`. Omit the line when CodeGraph or another structural tool is healthy and in use.
+
+### LITE Execution Summary
+
+Use for `LITE execute` instead of separate `Execution Summary` + `Task Contract Summary`.
+
+```md
+## Execution Summary
+- Task:
+- Mode: LITE
+- Rules:
+- Slice:
+  - Goal:
+  - Edit:
+  - Done:
+- Status: ALLOW / ALLOW_WITH_WARNINGS / BLOCKED
+- Next:
+```
+
+`Slice` is the frozen Micro Contract. Do not emit `## Task Contract Summary` as a peer block in T1-lite mode.
+
+### LITE preview
+
+When the user requests routing only, omit `Slice` and do not prepare for code changes:
+
+```md
+## Execution Summary
+- Task:
+- Mode: LITE
 - Rules:
 - Status: ALLOW / ALLOW_WITH_WARNINGS / BLOCKED
 - Next:
@@ -70,7 +167,7 @@ Use for anomaly cases that need one short corrective block without dumping the f
 
 ## Official Docs Check Summary
 
-Use when official platform, framework, SDK, host, or design constraints need a compact outward summary.
+Use only when official platform, framework, SDK, host, or design constraints need a compact outward summary because they materially affect the Task Contract, create a blocker, or change the implementation path.
 
 ```md
 ## Official Docs Check Summary
@@ -81,6 +178,7 @@ Use when official platform, framework, SDK, host, or design constraints need a c
 - Key official findings:
 - Constraint on this task:
 - Source mode:
+- Context7 state:
 - Status: ALLOW / ALLOW_WITH_WARNINGS / BLOCKED
 ```
 
@@ -92,6 +190,7 @@ Use when only the risky official constraints need extra outward explanation.
 ## Official Docs Focused Expansion
 - Expanded area:
 - Context7 / source scope:
+- Repair / fallback path:
 - Need original-doc verification:
 - Key official basis:
 - Implementation constraints:
@@ -109,7 +208,7 @@ For high-risk or anomaly cases, keep the summary as the base and expand only the
 
 ## Routing Summary
 
-Use only when routing-only output is explicitly needed before Task Contract creation, or when the user asks to inspect routing shape directly.
+Internal-only in T1/T2. Use only when routing-only output is explicitly requested before Task Contract creation.
 
 ```md
 ## Routing Summary
@@ -140,7 +239,7 @@ Use when routing needs to explain only the risky or anomalous part without dumpi
 
 ## Skill Routing Decision
 
-Use only in detailed disclosure mode when full routing traceability is required.
+T3 detailed-only. Use only in detailed disclosure mode when full routing traceability is required.
 
 ```md
 # Skill Routing Decision
@@ -172,12 +271,13 @@ Use only in detailed disclosure mode when full routing traceability is required.
 
 ## Rule-Loading Summary
 
-Use only when rule-loading-specific output is explicitly needed without the rest of the pre-execution packet. Do not use it as the default outward packet.
+Internal-only in T1/T2. Use only when rule-loading-specific output is explicitly needed without the rest of the pre-execution packet.
 
 ```md
 ## Rule-Loading Summary
 - Task type:
 - Execution mode:
+- Meta:
 - Core:
 - Extensions:
 - Playbooks:
@@ -261,16 +361,18 @@ Schema contract:
 
 ## Project Understanding Summary
 
-Use for normal work by default when structural understanding is required before impact analysis.
+Internal-only in T1/T2. Internal record by default when structural understanding is required before impact analysis.
 
 ```md
 ## Project Understanding Summary
 - Tooling:
+- Tool state:
 - Related entries:
 - Similar implementations:
 - Impacted surfaces:
 - Do-not-edit surfaces:
 - Risks:
+- Repair / fallback path:
 - Fallback note:
 ```
 
@@ -281,9 +383,11 @@ Use when only the risky or anomalous structural surfaces need extra explanation.
 ```md
 ## Project Understanding Focused Expansion
 - Expanded area:
+- Tool state:
 - Risky entry points or shared surfaces:
 - Critical call-chain note:
 - Do-not-edit note:
+- Repair / fallback path:
 - Why expanded:
 ```
 
@@ -313,6 +417,9 @@ Use only when detailed disclosure is required after routing and before impact an
 ## 5. Test Impact
 ## 6. Risk Points
 ## 7. Conclusion
+- Primary structural tool:
+- Tool state:
+- Repair / fallback path:
 - Allow entry to Impact Analysis:
 - Need dynamic reroute:
 - Need extra rules:
@@ -350,7 +457,7 @@ Add these sections for `STRICT` work or when the task touches shared or high-ris
 
 ## Impact Analysis Summary
 
-Use for normal work by default when explicit impact reconnaissance is still needed before execution.
+Internal-only in T1/T2. Internal record by default when explicit impact reconnaissance is still needed before execution.
 
 ```md
 ## Impact Analysis Summary
@@ -403,15 +510,25 @@ Add these sections for `STRICT` work or when high-risk surfaces need deeper trac
 
 ## Task Contract Summary
 
-Use for normal work by default when explicit scope control is still needed before execution.
+T1 default. Use when explicit scope control is still needed before execution.
 
 ```md
 ## Task Contract Summary
 - Goal:
-- Non-goals:
-- Allowed edits:
-- Acceptance criteria:
+- Scope:
+- Tests:
+- Acceptance:
+- Official constraint:
 ```
+
+`Official constraint` is optional. When official docs apply, carry **one binding rule in one line** only — for example lifecycle, permission, threading, or deprecated-API limit. Do not paste doc excerpts or multi-bullet official lists into TCS; keep detail in internal Official Docs Check Summary unless a `Risk Note` is required.
+
+Legacy mapping when compressing from detailed notes:
+
+- `Scope` = allowed edit surfaces plus forbidden/out-of-scope surfaces in one line
+- `Tests` = failing checks, reproduction path, or minimum verification plan
+- `Acceptance` = done-when criteria
+- `Official constraint` = single binding official rule when platform docs govern the slice; omit when not applicable
 
 ## Task Contract Focused Expansion
 
@@ -427,7 +544,7 @@ Use when only the risky contract slices need extra tightening or explanation.
 
 ## Task Contract
 
-Use only when detailed disclosure is required after impact analysis and before execution begins.
+T3 detailed-only. Use only when detailed disclosure is required after impact analysis and before execution begins.
 
 ```md
 # Task Contract
@@ -454,7 +571,62 @@ Add these sections for `STRICT` work or when human confirmation is required.
 ## 13. Blocking Conditions
 ```
 
+## Completion Summary
+
+T1b default outward block when work is finished. Use instead of full completion reports in ordinary tasks.
+
+```md
+## Completion Summary
+- Changed:
+- Verified:
+- Acceptance:
+- Diff scope:
+- Unverified:
+```
+
+`Diff scope` confirms Minimum Change Constraint compliance: only Task Contract–allowed surfaces changed.
+
+### LITE Completion Summary
+
+Use when `LITE execute` finishes. Shorter than the default T1b completion block.
+
+```md
+## Completion Summary
+- Changed:
+- Done check:
+- Unverified:
+```
+
+For `bugfix` tasks, do not use LITE completion; use the bug-fix field set below instead:
+
+```md
+## Completion Summary
+- Repro:
+- Red-before:
+- Root cause:
+- Green-after:
+- Diff scope:
+- Unverified:
+```
+
+## Review Summary
+
+T1b default outward block for review-only tasks. Use instead of the 19-section `Review Report` in ordinary review work.
+
+```md
+## Review Summary
+- Verdict: APPROVED / APPROVED_WITH_WARNINGS / CHANGES_REQUIRED / BLOCKED
+- Severity: NONE / P3 / P2 / P1 / P0
+- Findings:
+- Required fixes:
+- Recommendation:
+```
+
+Keep findings as a short bullet list, usually 3-8 items, findings first.
+
 ## Development Completion Report
+
+T3 detailed-only. Do not emit in default T1/T2 completion outward.
 
 ```md
 # Development Completion Report
@@ -477,6 +649,8 @@ Add these sections for `STRICT` work or when human confirmation is required.
 ```
 
 ## Bug-Fix Completion Report
+
+T3 detailed-only. Do not emit in default T1/T2 completion outward.
 
 ```md
 # Bug-Fix Completion Report
@@ -511,6 +685,8 @@ Add these sections for `STRICT` work or when human confirmation is required.
 `Severity Level` 写最高已确认 finding 严重级别；如果没有已确认 finding，写 `NONE`。
 
 ## Review Report
+
+T3 detailed-only. Do not emit in default T1/T2 review outward. For ordinary review, use `Review Summary` instead.
 
 ```md
 # Review Report

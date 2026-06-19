@@ -38,11 +38,14 @@ def join_rule_names(loaded_rows: list[list[str]], rule_type: str) -> str:
 
 def build_rules_line(loaded_rows: list[list[str]]) -> str:
     parts: list[str] = []
-    core = join_rule_names(loaded_rows, "core") or join_rule_names(loaded_rows, "meta")
+    meta = join_rule_names(loaded_rows, "meta")
+    core = join_rule_names(loaded_rows, "core")
     extensions = join_rule_names(loaded_rows, "extension")
     playbooks = join_rule_names(loaded_rows, "playbook")
     project_rules = join_rule_names(loaded_rows, "project rule")
     review = join_rule_names(loaded_rows, "review extension")
+    if meta:
+        parts.append(f"Meta: {meta}")
     if core:
         parts.append(f"Core: {core}")
     if extensions:
@@ -69,15 +72,26 @@ def build_execution_summary(args: argparse.Namespace, loaded_rows: list[list[str
 
 
 def build_task_contract_summary(args: argparse.Namespace) -> str:
-    return "\n".join(
-        [
-            "## Task Contract Summary",
-            f"- Goal: {args.contract_goal}",
-            f"- Non-goals: {args.contract_non_goals}",
-            f"- Allowed edits: {args.contract_allowed_edits}",
-            f"- Acceptance criteria: {args.contract_acceptance_criteria}",
-        ]
-    )
+    if args.contract_scope:
+        scope = args.contract_scope
+    else:
+        scope_parts: list[str] = []
+        if args.contract_allowed_edits:
+            scope_parts.append(f"Allowed: {args.contract_allowed_edits}")
+        if args.contract_non_goals:
+            scope_parts.append(f"Out of scope: {args.contract_non_goals}")
+        scope = "; ".join(scope_parts)
+    tests = args.contract_tests or args.contract_allowed_edits or "TBD"
+    lines = [
+        "## Task Contract Summary",
+        f"- Goal: {args.contract_goal}",
+        f"- Scope: {scope}",
+        f"- Tests: {tests}",
+        f"- Acceptance: {args.contract_acceptance_criteria}",
+    ]
+    if args.contract_official_constraint:
+        lines.append(f"- Official constraint: {args.contract_official_constraint}")
+    return "\n".join(lines)
 
 
 def build_rule_summary(args: argparse.Namespace, loaded_rows: list[list[str]], status: str) -> str:
@@ -85,7 +99,8 @@ def build_rule_summary(args: argparse.Namespace, loaded_rows: list[list[str]], s
         "## Rule-Loading Summary",
         f"- Task type: {args.task_type}",
         f"- Execution mode: {args.execution_mode}",
-        f"- Core: {join_rule_names(loaded_rows, 'core') or join_rule_names(loaded_rows, 'meta')}",
+        f"- Meta: {join_rule_names(loaded_rows, 'meta')}",
+        f"- Core: {join_rule_names(loaded_rows, 'core')}",
         f"- Extensions: {join_rule_names(loaded_rows, 'extension')}",
         f"- Playbooks: {join_rule_names(loaded_rows, 'playbook')}",
         f"- Project Rules: {join_rule_names(loaded_rows, 'project rule')}",
@@ -146,7 +161,6 @@ def build_full_manifest(
         f"- Complexity: {args.complexity}",
         f"- Risk score: {args.risk_score}",
         f"- Execution mode: {args.execution_mode}",
-        f"- Human confirmation points: {args.human_confirmation_points}",
         "",
         "## 2. Current Stage",
         f"- Stage: {args.stage}",
@@ -327,16 +341,31 @@ def main() -> int:
     )
     parser.add_argument("--decision-reason", default="", help="Reason for the execution decision")
     parser.add_argument("--contract-goal", default="", help="Task Contract Summary goal line")
-    parser.add_argument("--contract-non-goals", default="", help="Task Contract Summary non-goals line")
+    parser.add_argument(
+        "--contract-scope",
+        default="",
+        help="Task Contract Summary scope line. If omitted, derived from allowed edits and non-goals.",
+    )
+    parser.add_argument(
+        "--contract-tests",
+        default="",
+        help="Task Contract Summary tests line. If omitted, falls back to allowed edits or TBD.",
+    )
+    parser.add_argument("--contract-non-goals", default="", help="Legacy scope input: out-of-scope surfaces")
     parser.add_argument(
         "--contract-allowed-edits",
         default="",
-        help="Task Contract Summary allowed-edits line",
+        help="Legacy scope/tests input: allowed edit surfaces",
     )
     parser.add_argument(
         "--contract-acceptance-criteria",
         default="",
-        help="Task Contract Summary acceptance-criteria line",
+        help="Task Contract Summary acceptance line",
+    )
+    parser.add_argument(
+        "--contract-official-constraint",
+        default="",
+        help="Optional Task Contract Summary official constraint (one line only)",
     )
     parser.add_argument("--output", help="Optional output file path")
     args = parser.parse_args()
@@ -350,16 +379,24 @@ def main() -> int:
     if args.format == "full" and not args.stage:
         parser.error("--stage is required for full format")
 
-    contract_values = [
-        args.contract_goal,
-        args.contract_non_goals,
-        args.contract_allowed_edits,
-        args.contract_acceptance_criteria,
-    ]
+    if args.contract_scope:
+        contract_values = [
+            args.contract_goal,
+            args.contract_scope,
+            args.contract_tests or args.contract_allowed_edits,
+            args.contract_acceptance_criteria,
+        ]
+    else:
+        contract_values = [
+            args.contract_goal,
+            args.contract_non_goals,
+            args.contract_allowed_edits,
+            args.contract_acceptance_criteria,
+        ]
     if any(contract_values) and not all(contract_values):
         parser.error(
-            "Task Contract Summary requires --contract-goal, --contract-non-goals, "
-            "--contract-allowed-edits, and --contract-acceptance-criteria together"
+            "Task Contract Summary requires goal, scope (or non-goals + allowed edits), "
+            "tests (or allowed edits when using legacy scope inputs), and acceptance together"
         )
 
     try:

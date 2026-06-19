@@ -28,12 +28,22 @@ Do not begin impact analysis when official docs check is required but missing.
 
 ### Context7 Positioning
 
-Treat official-docs work as a two-layer source model:
+Treat official-docs work as a layered source model:
 
-1. Context7 or equivalent MCP: fast, version-scoped official-docs retrieval for AI workflows
-2. Original official docs or API reference: authority verification for high-risk or disputed constraints
+| Level | Name | Source | Typical use |
+|---|---|---|---|
+| **L1** | scoped summary | Context7 or equivalent MCP | default for `S0`–`S2` platform touch when dispute is low — enough to enter impact analysis and freeze Task Contract |
+| **L2** | original verification | official docs or API reference | required for `S3+`, deprecated APIs, permission/auth, installer/service/registry, security, migration, or repeated failed repairs |
+| **L3** | human confirmation | L2 plus explicit human sign-off | required for `STRICT` **and** release or go-live work |
 
-CodeGraph explains project facts. Context7 and original official docs explain platform facts.
+Routing picks the **deepest required level** for the task. Do not skip a level because L1 was convenient.
+
+Legacy two-layer shorthand still applies inside each level:
+
+1. Context7 or equivalent MCP: fast, version-scoped retrieval
+2. Original official docs or API reference: authority verification at L2+
+
+CodeGraph explains project facts. Official docs layers explain platform facts.
 
 Do not let Context7 replace project understanding, TDD, review, or project rules.
 
@@ -82,9 +92,97 @@ Prefer these sources in order:
 
 Load these sources progressively. Start from the exact platform, API, control, SDK, host, or design surface identified by project understanding. Do not query broad official documentation packs or unrelated platform areas just because the task is platform-sensitive.
 
-For ordinary platform work, a scoped Context7-backed summary may be enough if the library, version, and relevant surface are clear.
+### Context7 Availability And Repair Flow
 
-For high-risk work, do not stop at Context7. Verify the original official docs or API reference directly before freezing the Task Contract.
+When Context7 or an equivalent official-docs MCP is expected, check these things in order:
+
+1. whether the MCP server is installed or enabled for the active host
+2. whether the required URL, headers, environment variables, or secrets are configured
+3. whether the server can connect and answer a narrow library, version, or surface lookup
+4. whether library resolution matched the exact dependency, framework, SDK, or version that the task depends on
+
+Distinguish these failure modes explicitly when known:
+
+1. not installed or not enabled
+2. installed but not configured
+3. configured but missing auth, headers, or secrets
+4. configured but unreachable, timing out, or failing initialization
+5. reachable but matched the wrong library or wrong version
+6. reachable but returned incomplete evidence for the required surface
+
+Do not collapse all of these into a generic "Context7 unavailable" statement.
+
+If the current task is specifically to install, configure, debug, or verify Context7 or MCP tooling itself, treat the tooling problem as the primary task. Do not route that task into ordinary docs fallback.
+
+For ordinary implementation work where Context7 is only a dependency, use this repair-first order before fallback:
+
+1. inspect host-local MCP registration or enablement state
+2. inspect the required URL, header, env, or secret wiring
+3. retry one narrow library-resolution or docs query after a scoped repair or clarification
+4. if the retry still fails or still cannot confirm the exact library or version, record the concrete failure mode and continue with fallback sources
+
+Do not make durable user-level config changes silently during an ordinary coding task unless the user explicitly asked to install or fix the MCP setup, or the current environment clearly delegates that setup work to the agent.
+
+#### Codex Host Repair Steps
+
+When the active host is Codex, prefer this concrete order:
+
+1. inspect `~/.codex/config.toml` or trusted project-scoped `.codex/config.toml` for the expected `mcp_servers.context7` entry
+2. verify the configured `url`, header mode, and required environment variable or secret wiring
+3. use `codex mcp list` or `codex mcp get context7` to confirm Codex sees the server as enabled
+4. if auth is OAuth-based, use `codex mcp login`; if the server uses static headers or env-backed headers, verify those inputs instead of attempting OAuth blindly
+5. after config or env changes, prefer a new Codex thread or app restart before declaring the server still broken
+6. do one narrow Codex-mediated MCP self-test, such as a library-resolution query for the exact framework or SDK surface the task needs
+
+Do not treat "present in config" as equivalent to "usable in the current Codex session."
+
+#### Cursor Host Repair Steps
+
+When the active host is Cursor, prefer this concrete order:
+
+1. inspect both project-scoped `.cursor/mcp.json` and global `~/.cursor/mcp.json`, and determine which scope should own the server
+2. verify the configured `url`, header interpolation, env variables, and whether duplicate server names across scopes could cause confusion
+3. inspect `Settings -> Features -> Model Context Protocol` to confirm the server is enabled in the active workspace
+4. inspect `Output -> MCP Logs` or the current Cursor log bundle for initialization, auth, and connectivity errors before falling back
+5. after config or env changes, restart Cursor or reopen the active window before declaring the server still broken
+6. do one narrow Cursor-mediated MCP self-test, such as a library-resolution query for the exact framework or SDK surface the task needs, or verify a successful connection plus a successful tool call in logs
+
+Do not treat "the JSON file parses" as equivalent to "Cursor connected and can answer the required query."
+
+For ordinary platform work, an L1 Context7-backed summary may be enough if the library, version, and relevant surface are clear.
+
+For L2 work, do not stop at Context7. Verify the original official docs or API reference directly before freezing the Task Contract.
+
+For L3 work, record an explicit human confirmation point in routing output and do not treat release execution as unblocked until that confirmation is satisfied.
+
+### Official Docs Depth Selection
+
+Default mapping:
+
+- **L1** — platform-sensitive `FAST` / `STANDARD` tasks with no L2 trigger below
+- **L2** — any mandatory original-source trigger, or complexity `S3+`
+- **L3** — execution mode `STRICT` **and** task family includes release or go-live
+
+L2 triggers (any one forces L2 minimum):
+
+1. complexity `S3+`
+2. deprecated API or breaking-change dependency
+3. permission, auth, privacy, or security-sensitive platform behavior
+4. installer, service, registry, or startup integration
+5. repeated failed bug-fix attempts on platform behavior
+6. Context7 incomplete, version-ambiguous, or conflicting with observed behavior
+
+### Task Contract Official Constraint Discipline
+
+When official docs constrain execution, `Task Contract Summary` carries **one line only**:
+
+```md
+- Official constraint: {single binding rule}
+```
+
+Examples: `UI work must stay on UI thread`, `Installer must not write HKLM without elevation`, `API X deprecated; use Y before vNext`.
+
+Do not paste excerpts, multi-bullet official lists, or long API notes into TCS. Keep detailed citations in internal `Official Docs Check Summary`; surface outward through `Risk Note` only when the constraint blocks or reshapes the slice.
 
 ### Mandatory Original-Source Verification
 
@@ -160,6 +258,12 @@ Check:
 
 ### Fallback Rule
 
+Use fallback only after the availability and repair flow above has either:
+
+1. proved that Context7 is not available in the current host
+2. proved that Context7 is misconfigured and not safely repairable inside the current task scope
+3. proved that Context7 can connect but still cannot confirm the exact library, version, or required surface after one scoped retry
+
 If official sources are unavailable, say exactly:
 
 `无法访问官方资料，已使用项目现有实现、源码注释、测试和稳定实践作为降级依据。`
@@ -175,14 +279,15 @@ If Context7 is unavailable or cannot confirm the relevant library or version, fa
 When fallback is used, mark the result as `ALLOW_WITH_WARNINGS` or `BLOCKED` based on risk, and explicitly state `官方规范未完全确认`.
 
 Do not pretend the fallback is equivalent to confirmed official guidance.
+Do not hide whether fallback happened because Context7 was missing, misconfigured, auth-incomplete, unreachable, or version-ambiguous.
 
 ### Output Depth
 
 #### Summary
 
-Use `Official Docs Check Summary` from `references/report-templates.md`.
+Use `Official Docs Check Summary` from `references/report-templates.md` as the internal record shape.
 
-Default to this when the check is required but outward output should remain compact.
+Keep this internal by default when the check is required. Emit it outward only when official guidance materially constrains the Task Contract, changes the implementation direction, blocks work, creates an anomaly, or cannot fit in `Risk Note` or `Exception Note`.
 
 #### Focused Expansion
 
@@ -204,5 +309,6 @@ Use this only when one of these is true:
 - Default outward output should still stay minimal.
 - Do not dump long official excerpts into normal-task output.
 - Do not load or summarize unrelated official docs. Keep the check scoped to the surfaces that can actually constrain this task.
+- In default outward output, do not emit a separate `Official Docs Check Summary` block unless the routed disclosure trigger requires it; keep the official-docs record internal.
 - Surface official-docs findings outward only when risk, anomaly, or explicit detailed mode requires it.
 - Except for headings, labels, keywords, paths, and code identifiers, write outward report prose in Chinese.

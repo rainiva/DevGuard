@@ -5,4 +5,4 @@ description: Internal DevGuard module for bug diagnosis, reproduction, evidence 
 
 # DevGuard Bug Fix
 
-Use this module through the external `DevGuard` skill. Read `references/bug-fix-core.md`, assume required project understanding already happened or trigger it if the entry path is still unclear, load playbooks only for the concrete issue class, and stop after repeated failed repairs.
+Use this module through the external `DevGuard` skill. Read `references/bug-fix-core.md`, enforce the six-item Evidence Gate and red line (**no failing check = no repair code**), assume required project understanding already happened or trigger it if the entry path is still unclear, load playbooks only for the concrete issue class, and stop after repeated failed repairs.

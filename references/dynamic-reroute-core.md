@@ -11,15 +11,38 @@
 
 Reroute when the original route no longer matches the task reality. Rerouting is a normal control mechanism, not a failure.
 
+Default outward reroute update: refresh only `Execution Summary` fields for Mode, Rules, Status, and Next. Do not dump a full routing transcript unless detailed disclosure is active.
+
 ## Full Rule
 
-Trigger reroute when:
+### Reroute Trigger Table
 
-1. The task shifts phase, such as development to review or release.
-2. A hidden contract, data, permission, or compatibility surface appears.
-3. A concrete bug category becomes clear and needs a playbook.
-4. The same issue fails twice.
-5. A blocker appears.
-6. A user changes the requested outcome.
+| Trigger | Action |
+|---|---|
+| Phase shifts to review or release | Load review or release rules; switch Named Route to `route:review-only` or release chain |
+| Hidden contract, data, permission, or compatibility surface appears | Rerun impact analysis; amend or rebuild Task Contract before further execution |
+| Concrete bug category becomes clear and needs a playbook | Load the matching playbook; refresh rule-loading output |
+| Same issue fails twice | Enter failure retrospective; reroute through `failure-retrospective-core -> dynamic-reroute-core` |
+| User changes requested outcome | Rebuild Task Profile; amend or rebuild Task Contract |
+| Blocker appears | Emit `Exception Note`; set status to `BLOCKED` until the blocker clears |
 
-On reroute, emit a short updated routing decision, refresh the required rule-loading output, rerun project understanding when entry points or shared surfaces changed, rerun official docs check when platform, framework, SDK, host, control-template, or design constraints changed, and amend or rebuild the Task Contract before further execution if scope, risk, or acceptance criteria changed.
+### Reroute Procedure
+
+On reroute:
+
+1. Emit a short updated routing decision internally.
+2. Refresh the required rule-loading output.
+3. Rerun project understanding when entry points or shared surfaces changed.
+4. Rerun official docs check when platform, framework, SDK, host, control-template, or design constraints changed.
+5. Amend or rebuild the Task Contract before further execution if scope, risk, or acceptance criteria changed.
+
+### Outward Disclosure On Reroute
+
+In default summary mode, update only these `Execution Summary` fields outward:
+
+- Mode
+- Rules
+- Status
+- Next
+
+Keep the reroute rationale compact inside `Risk Note` or `Exception Note` when the user needs to see why the route changed. Use full `Skill Routing Decision` only when detailed disclosure is active.

@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main, release/**]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Bundle check
+        run: python scripts/check_devguard_bundle.py --skill-dir .
+
+      - name: Skillopt dataset validation
+        run: python scripts/run_skillopt_judge.py --skill-dir . --dataset all --minimum-rows 14
+
+      - name: Scenario simulation
+        run: python scripts/simulate_scenarios.py

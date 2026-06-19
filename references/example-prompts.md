@@ -1,35 +1,34 @@
 # Example Prompts
 
-Use these prompts to invoke DevGuard in a realistic way. Replace the task details, but keep the shape compact and concrete.
+Compact invocation shapes. Replace `{task}` with the concrete request.
 
-## Feature Work
+## Short Triggers
 
-`Use $devguard to route a medium-risk feature request in this repo, load only the minimum required rules, keep the default outward output to Execution Summary plus Task Contract Summary, and if risk appears expand only the affected part unless I ask for full detail.`
+| Trigger | Effect |
+|---|---|
+| `/devguard lite` | Force `LITE` mode; micro daily execute with `Slice` in ES when whitelist matches; preview-only when user says not to code |
+| `/devguard fast` | Force `FAST` mode; compact Contract; minimal pre-execution gates per Gate Matrix |
+| `/devguard strict` | Force `STRICT` mode; deep gates; focused expansion on risk |
+| `/devguard review` | Review-only route; findings first; no code changes |
 
-## UI Work
+Usage: prepend the trigger to the task, for example `` `/devguard lite` fix typo in README line 12 `` or `` `/devguard fast` {task} ``.
 
-`Use $devguard to handle a UI implementation task for this screen change. Route it first, use CodeGraph-style project understanding, check the target platform's official design guidance before impact analysis when it matters, load the right UI core and review extension, and keep the visual work bound to real functionality.`
+Default one-liner when no trigger is given:
 
-## Bug Fix
+`Use $devguard: route, load minimal rules, freeze Task Contract before coding. Outward output ES+TCS only.`
 
-`Use $devguard to handle this bug report. Reproduce first, use project understanding to find the entry points and call chain, run official docs check before impact analysis if platform or SDK behavior may be involved, load only the needed bug-fix and playbook-related rules, and do not let implementation start before the evidence chain is clear.`
+## Scenarios (one line each)
 
-## Refactor Or Migration
+- **LITE daily:** `` `/devguard lite` fix the typo in {file} — freeze Slice in ES, no separate TCS, then edit. ``
+- **Feature:** `Use $devguard to route {task}. ES+TCS only; expand on risk.`
+- **UI:** `Use $devguard for UI work on {task}. Real user-path verification in Contract; ES+TCS.`
+- **Bug fix:** `Use $devguard for bug fix: {task}. Red before repair; minimal diff; ES+TCS.`
+- **Refactor / migration:** `Use $devguard to plan refactor: {task}. Compatibility + rollback first; ES+TCS.`
+- **AI / agent:** `Use $devguard for AI feature: {task}. Tool/memory/cost gates; ES+TCS.`
+- **Platform / SDK:** `Use $devguard for platform work: {task}. Official docs before IA; block on violation.`
+- **Review:** `Use $devguard to review {task}. Findings first; mirror dev-side gates.`
+- **Project rules:** `Use $devguard to load project rules for {task}. Index first; defer unrelated files.`
 
-`Use $devguard to plan this refactor. Start with project understanding, run official docs check if platform or framework constraints may govern the new shape, freeze current behavior, classify compatibility and rollback risk, and load only the migration-related rules needed for the current slice.`
+## Detailed Templates
 
-## AI Or Agent Feature
-
-`Use $devguard to route this AI feature task. Treat tool calls, memory boundaries, observability, and cost controls as first-class routing factors, run project understanding before impact analysis, run official docs check if SDK constraints matter, emit Execution Summary plus Task Contract Summary by default, and if risk appears expand only the affected part before freezing the Task Contract.`
-
-## Platform Or SDK Work
-
-`Use $devguard to route this platform-sensitive task. Use project understanding to learn the code path, confirm the official platform or framework constraints before impact analysis, keep the default outward output minimal, and block if the implementation would violate official requirements or uses deprecated APIs without a reason.`
-
-## Review
-
-`Use $devguard to review this change set. Mirror the implementation-side rules into review-side verification, list findings first, and call out any missing evidence or missing gates.`
-
-## Project Rule Loading
-
-`Use $devguard to determine which project-specific rules should be loaded for this task. Load the project index first, then only the matching domain files, state which project files remain deferred, and expand to a full manifest only if the task or mode requires it.`
+Full bug-fix Evidence Gate prompt: [bug-fix-core.md](bug-fix-core.md#prompt-template).

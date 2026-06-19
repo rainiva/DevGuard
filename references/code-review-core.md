@@ -1,8 +1,19 @@
 # Code Review Core
 
-Use this when reviewing changes or when implementation should stay aligned with the eventual review bar.
+## Metadata
 
-## Review Priorities
+- Layer: execution core
+- Load level: metadata, summary, full
+- Use when: reviewing changes or keeping implementation aligned with the eventual review bar.
+- Risk tags: `security`, `auth_permission`, `api_contract`, `data_consistency`, `compatibility`, `official_docs_required`
+
+## Summary
+
+Findings first, ordered by severity. Mirror development-side gates and extensions. Verify [Minimum Change Constraint](shared-guardrails.md#minimum-change-constraint) compliance on every diff. Default outward shape is `Review Summary`; use full `Review Report` only in detailed mode.
+
+## Full Rule
+
+### Review Priorities
 
 Focus on:
 
@@ -20,7 +31,7 @@ Load [official-docs-review-extension.md](official-docs-review-extension.md) when
 
 Keep summaries brief. Findings come first.
 
-## Required Review Checks
+### Required Review Checks
 
 Review whether:
 
@@ -35,8 +46,10 @@ Review whether:
 9. the stated acceptance criteria were actually verified
 10. tests and docs were updated where needed
 11. performance or rollback risks were ignored or hand-waved
+12. repairable CodeGraph, Understand-anything, graphify, or equivalent structural-tool failures were fixed and retried, or explicitly disclosed before search-only fallback was used
+13. the diff respects Task Contract scope and the Minimum Change Constraint — no drive-by refactors, scope creep, or unnecessary new dependencies
 
-## Output Shape
+### Output Shape
 
 Default to:
 
@@ -44,8 +57,9 @@ Default to:
 2. Open questions or assumptions
 3. Brief change summary only after findings
 
-## Review Discipline
+### Review Discipline
 
 - Do not praise away risk.
 - Do not accept "should work" in place of evidence.
+- Do not accept search-only project understanding as equivalent when a higher-priority structural tool was available but a repair-first attempt was skipped.
 - If there are no findings, say that explicitly and mention any residual risk or testing gap.

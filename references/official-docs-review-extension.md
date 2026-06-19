@@ -20,6 +20,7 @@ Verify:
 12. high-risk tasks did not rely only on Context7 summaries when original official-doc verification was required
 13. fallback or partial-official-guidance states were disclosed when official verification was incomplete
 14. conflicts between official guidance, project behavior, and test results were resolved explicitly
+15. repairable Context7 install, config, auth, or connectivity failures were either fixed and retried, or explicitly disclosed before fallback was used
 
 ## Blocking Conditions
 
@@ -33,3 +34,4 @@ Flag review blockers when:
 - a high-risk platform decision relies only on Context7 summary output without original official-doc or API-reference verification
 - Context7 matched the wrong library or wrong version and still drove the implementation
 - fallback official-docs evidence is treated as fully confirmed official guidance
+- a repairable Context7 setup failure was silently treated as ordinary docs fallback without disclosure

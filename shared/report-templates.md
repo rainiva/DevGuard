@@ -1,3 +1,5 @@
-# Report Templates
+# Moved
 
-Use `references/report-templates.md` as the canonical report template source.
+Canonical: [references/report-templates.md](../references/report-templates.md)
+
+This stub exists for backward compatibility.

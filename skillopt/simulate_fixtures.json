@@ -1,0 +1,41 @@
+{
+  "golden": {
+    "feature-normal": "## Execution Summary\n- Task: medium-risk feature routing\n- Mode: STANDARD\n- Rules: task-router, impact-analysis, daily-development\n- Status: ALLOW\n- Next: freeze Task Contract before coding\n\n## Task Contract Summary\n- Goal: add export button\n- Scope: Settings page and ExportService only\n- Tests: export flow unit test red then green\n- Acceptance: user can export CSV\n",
+    "refactor-compact": "## Execution Summary\n- Task: multi-file refactor routing\n- Mode: STANDARD\n- Rules: CodeGraph, impact-analysis\n- Status: ALLOW\n- Next: CodeGraph project understanding first\n\n## Task Contract Summary\n- Goal: extract duplicate validation logic\n- Scope: utils/validation and two call sites\n- Tests: existing validation tests stay green\n- Acceptance: behavior unchanged\n",
+    "bugfix-evidence": "## Execution Summary\n- Task: flaky test diagnosis\n- Mode: STANDARD\n- Rules: bug-fix, tdd-workflow\n- Status: ALLOW_WITH_WARNINGS\n- Next: reproduce and collect evidence chain first\n\n## Task Contract Summary\n- Goal: locate flaky root cause\n- Scope: tests/auth and AuthService\n- Tests: stable reproduction first\n- Acceptance: repro steps repeatable\n",
+    "review-only": "## Execution Summary\n- Task: review this change set\n- Mode: STANDARD\n- Rules: code-review\n- Status: ALLOW\n- Next: emit findings\n\n## Review Summary\n- Verdict: CHANGES_REQUIRED\n- Severity: P2\n- Findings: missing boundary tests\n- Required fixes: add null input test\n- Recommendation: re-review after fix\n",
+    "high-risk-installer": "## Execution Summary\n- Task: installer replay gating hotfix\n- Mode: STRICT\n- Rules: release-check, impact-analysis\n- Status: ALLOW_WITH_WARNINGS\n- Next: freeze Contract\n\n## Risk Note\n- Focus: rollback and recoverability\n- Why it matters: failed install must rollback\n- Extra gate: release validation\n\n## Task Contract Summary\n- Goal: fix replay gating\n- Scope: installer module\n- Tests: focused failing test first\n- Acceptance: rollback path verified\n",
+    "anomaly-missing-rule": "## Execution Summary\n- Task: WPF scrollbar bugfix routing\n- Mode: STANDARD\n- Rules: task-router\n- Status: BLOCKED\n- Next: load missing playbook\n\n## Exception Note\n- Reason: required playbook missing\n- Missing / wrong: playbooks/ui/wpf-scrollbar-bug.md\n- Required fix: load or declare missing\n- Status: BLOCKED\n",
+    "platform-wpf": "## Execution Summary\n- Task: WPF control-template fix routing\n- Mode: STANDARD\n- Rules: official-docs-check, ui-implementation\n- Status: ALLOW\n- Next: confirm official constraints before IA\n\n## Task Contract Summary\n- Goal: fix template binding\n- Scope: ExampleView.xaml\n- Tests: UI thread path verification\n- Acceptance: DPI and Dispatcher compliant\n",
+    "ui-change": "## Execution Summary\n- Task: Settings screen UI implementation\n- Mode: STANDARD\n- Rules: ui-implementation\n- Status: ALLOW\n- Next: freeze Contract\n\n## Task Contract Summary\n- Goal: new setting item\n- Scope: SettingsPage\n- Tests: real user click path\n- Acceptance: user can operate and see result\n",
+    "ai-tool-calling": "## Execution Summary\n- Task: AI tool calling feature\n- Mode: STANDARD\n- Rules: ai-llm-feature\n- Status: ALLOW\n- Next: freeze Contract\n\n## Task Contract Summary\n- Goal: add tool calling\n- Scope: agent runtime\n- Tests: tool cap and cost assertions\n- Acceptance: cost controlled and observable\n",
+    "repair-failure-reroute": "## Execution Summary\n- Task: bug after two failed repairs\n- Mode: STANDARD\n- Rules: failure-retrospective-core\n- Status: BLOCKED\n- Next: failure retrospective before reroute\n\n## Task Contract Summary\n- Goal: stop blind retries\n- Scope: current bug slice\n- Tests: new validation plan\n- Acceptance: new evidence before third attempt\n",
+    "codegraph-stale": "## Execution Summary\n- Task: multi-file change\n- Mode: STANDARD\n- Rules: CodeGraph, impact-analysis\n- Status: ALLOW_WITH_WARNINGS\n- Next: refresh CodeGraph index before IA\n\n## Task Contract Summary\n- Goal: enter IA safely\n- Scope: identified entry files\n- Tests: TBD\n- Acceptance: CodeGraph freshness passed\n",
+    "fast-s1-tiny": "## Execution Summary\n- Task: single-file typo\n- Mode: FAST\n- Rules: daily-development\n- Status: ALLOW\n- Next: freeze compact Contract\n\n## Task Contract Summary\n- Goal: fix typo\n- Scope: README.md one line\n- Tests: visual check\n- Acceptance: text correct\n",
+    "lite-typo-execute": "## Execution Summary\n- Task: README typo\n- Mode: LITE\n- Rules: daily-development\n- Slice:\n  - Goal: fix README spelling\n  - Edit: README.md line 42\n  - Done: open file and confirm line text\n- Status: ALLOW\n- Next: apply minimal edit\n",
+    "lite-upgrade-fast": "## Execution Summary\n- Task: auth login bugfix\n- Mode: FAST\n- Rules: bug-fix, tdd-workflow\n- Status: ALLOW\n- Next: Red exists, prepare minimal fix\n\n## Task Contract Summary\n- Goal: fix login failure\n- Scope: AuthService\n- Tests: failing repro already red\n- Acceptance: repro green and regression pass\n",
+    "regression-normal": "## Execution Summary\n- Task: normal feature\n- Mode: STANDARD\n- Rules: task-router\n- Status: ALLOW\n- Next: freeze Contract\n\n## Task Contract Summary\n- Goal: small feature\n- Scope: single module\n- Tests: unit test\n- Acceptance: acceptance pass\n",
+    "regression-high-risk": "## Execution Summary\n- Task: installer hotfix\n- Mode: STRICT\n- Rules: release-check\n- Status: ALLOW_WITH_WARNINGS\n- Next: continue\n\n## Risk Note\n- Focus: rollback\n- Why it matters: release surface\n- Extra gate: release validation\n\n## Task Contract Summary\n- Goal: hotfix\n- Scope: installer\n- Tests: failing test\n- Acceptance: rollback ok\n",
+    "regression-platform": "## Execution Summary\n- Task: WPF fix\n- Mode: STANDARD\n- Rules: official-docs-check\n- Status: ALLOW\n- Next: confirm official constraints before IA\n\n## Task Contract Summary\n- Goal: compliant fix\n- Scope: WPF view\n- Tests: UI path\n- Acceptance: official constraints satisfied\n"
+  },
+  "negative": [
+    {
+      "label": "lite-with-tcs-leak",
+      "task_id": "lite-typo-execute",
+      "suffix": "\n\n## Task Contract Summary\n- Goal: should not appear\n"
+    },
+    {
+      "label": "feature-missing-tcs",
+      "task_id": "feature-normal",
+      "transcript": "## Execution Summary\n- Task: bad\n- Mode: STANDARD\n- Rules: x\n- Status: ALLOW\n- Next: y\n"
+    },
+    {
+      "label": "high-risk-missing-risk-note",
+      "task_id": "high-risk-installer",
+      "replace": [
+        "## Risk Note\n",
+        "## Risk NOTE MISSING\n"
+      ]
+    }
+  ]
+}
