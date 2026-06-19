@@ -165,6 +165,7 @@ NAMED_ROUTE_IDS = [
     "route:performance-change",
     "route:ai-llm-feature",
     "route:review-only",
+    "route:lite-daily",
 ]
 CODEGRAPH_UNDERSTANDING_REQUIRED_PHRASES = [
     "### Tool Availability And Repair Flow",
@@ -223,7 +224,7 @@ MINIMUM_CHANGE_REQUIRED_PHRASES = {
     ],
 }
 P4_MAX_INVOCATION_CHARS = 120
-P4_SHORT_TRIGGERS = ["/devguard fast", "/devguard strict", "/devguard review"]
+P4_SHORT_TRIGGERS = ["/devguard lite", "/devguard fast", "/devguard strict", "/devguard review"]
 P4_COEXISTENCE_PHRASES = [
     "## Coexistence Rules",
     "DevGuard owns",
@@ -258,7 +259,33 @@ GLOSSARY_REQUIRED_TERMS = [
     "Coexistence Rules",
     "No-Index Fallback",
     "Minimum Change Constraint",
+    "LITE",
 ]
+LITE_REQUIRED_PHRASES = {
+    "references/task-routing.md": [
+        "## LITE Mode",
+        "LITE execute whitelist",
+        "Micro Slice",
+        "route:lite-daily",
+        "/devguard lite",
+    ],
+    "references/report-templates.md": [
+        "T1-lite",
+        "LITE Execution Summary",
+        "LITE Completion Summary",
+        "Do not emit `## Task Contract Summary` as a peer block in T1-lite mode",
+    ],
+    "references/rule-loading.md": [
+        "### LITE",
+        "Micro Slice inside `Execution Summary` satisfies the Contract freeze",
+    ],
+    "references/shared-guardrails.md": [
+        "### LITE Micro Slice",
+    ],
+    "references/example-prompts.md": [
+        "/devguard lite",
+    ],
+}
 UI_REAL_SCENARIO_REQUIRED_PHRASES = {
     "SKILL.md": [
         "require at least one test, reproduction, or acceptance check that exercises the real user operation path",
@@ -338,6 +365,7 @@ FORWARD_TESTING_REQUIRED_PHRASES = [
     "Minimum Change Constraint",
     "No-Index Fallback",
     "Official constraint",
+    "LITE execute",
 ]
 WRAPPER_DISCLOSURE_REQUIRED_PHRASES = {
     "skills/12-codegraph-project-understanding/SKILL.md": [
@@ -705,6 +733,13 @@ def main() -> int:
     for term in GLOSSARY_REQUIRED_TERMS:
         if term not in glossary_content:
             invalid.append(f"references/glossary.md missing glossary term: {term}")
+
+    for rel_path, phrases in LITE_REQUIRED_PHRASES.items():
+        lite_path = skill_dir / rel_path
+        lite_content = lite_path.read_text(encoding="utf-8") if lite_path.exists() else ""
+        for phrase in phrases:
+            if phrase not in lite_content:
+                invalid.append(f"{rel_path} missing LITE phrase: {phrase}")
 
     if rule_loading_content.count("- Meta rules:") != 1:
         invalid.append("references/rule-loading.md should define Meta rules once")

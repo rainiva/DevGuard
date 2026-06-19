@@ -54,6 +54,7 @@ Verify whether the test agent:
 20. keeps edits inside Task Contract scope and applies the Minimum Change Constraint — no drive-by refactors or scope creep without reroute
 21. when CodeGraph is unavailable after repair, records `codegraph_unavailable`, applies No-Index Fallback, and sets `Structural tool` in `Execution Summary`
 22. picks official-docs depth L1 / L2 / L3 correctly and keeps at most one `Official constraint` line in TCS
+23. `LITE execute` freezes `Slice` inside `Execution Summary` and does not emit separate `Task Contract Summary`; `LITE` upgrades to `FAST`+ for bugfix or Primary-tag work
 
 ## Failure Signals
 
@@ -85,6 +86,8 @@ Treat these as forward-test failures:
 - bundles drive-by refactors, renames, or cleanup unrelated to the approved slice
 - silently continues on a stale or unavailable CodeGraph index without No-Index Fallback disclosure
 - puts long official-doc excerpts or multi-bullet platform rules into `Task Contract Summary` instead of one `Official constraint` line
+- emits separate `Task Contract Summary` on a whitelist `LITE execute` task instead of embedded `Slice`
+- keeps `Mode: LITE` for `bugfix`, auth, UI flow, or other Primary-tag work without upgrading to `FAST` or `STANDARD`
 
 ## Regression Example Set
 

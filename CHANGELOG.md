@@ -6,6 +6,7 @@ All notable changes to DevGuard will be documented in this file.
 
 ### Added
 
+- **`LITE` execution mode** for daily micro-edits: Micro Slice in `Execution Summary`, no separate TCS, `route:lite-daily`, `/devguard lite` trigger
 - Refinement execution plan and baseline docs (`docs/REFINEMENT_PLAN.md`, `docs/REFINEMENT_BASELINE.md`)
 - Skillopt regression datasets (12 benchmark + 3 held-out) and bundle-integrated validation
 - Output Tier Model (T1 / T1b / T2 / T3) with `Completion Summary` and `Review Summary`

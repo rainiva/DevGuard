@@ -34,4 +34,5 @@ Compact definitions for outward disclosure, routing, and gate vocabulary. Canoni
 | Official Docs L3 | L2 plus explicit human confirmation for STRICT release or go-live | [official-docs-check.md](official-docs-check.md) |
 | Official constraint | Single one-line platform rule in TCS when docs govern the slice | [report-templates.md](report-templates.md) |
 | Structural tool | Execution Summary field reporting CodeGraph or fallback state | [report-templates.md](report-templates.md) |
+| LITE | Daily micro-edit mode: Slice in ES for execute; ES-only for preview; upgrades to FAST+ on bugfix/Primary tags | [task-routing.md](task-routing.md) |
 | Short trigger | /devguard fast, /devguard strict, or /devguard review prepended to a task | [example-prompts.md](example-prompts.md) |

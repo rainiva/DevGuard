@@ -245,7 +245,9 @@ python scripts/run_skillopt_judge.py --skill-dir . --task-id feature-normal --tr
 Use $devguard: route, load minimal rules, freeze Task Contract before coding. Outward output ES+TCS only.
 ```
 
-Short triggers: `/devguard fast` | `/devguard strict` | `/devguard review` — see [references/example-prompts.md](references/example-prompts.md).
+Short triggers: `/devguard lite` | `/devguard fast` | `/devguard strict` | `/devguard review` — see [references/example-prompts.md](references/example-prompts.md).
+
+**LITE** daily micro-edit: `` `/devguard lite` fix typo in {file} `` — `Slice` in ES, no separate TCS.
 
 ## Release Surface
 

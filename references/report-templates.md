@@ -6,16 +6,23 @@ Use these templates as compact output shapes. Fill only the sections relevant to
 
 | Tier | Name | Default outward blocks | Trigger |
 |---|---|---|---|
+| T1-lite | lite | `Execution Summary` with embedded `Slice` | `LITE` execute |
 | T1 | summary | `Execution Summary` + `Task Contract Summary` | default |
-| T1b | completion | `Completion Summary` | task finished; default completion outward |
+| T1b | completion | `Completion Summary` or `LITE Completion Summary` | task finished |
 | T2 | focused-expansion | T1 blocks + `Risk Note` or `Exception Note` (+ optional focused slice) | high-risk or anomaly |
 | T3 | detailed | full routing, manifest, IA, TC, completion/review reports | audit, verbose, forward-test evidence |
 
 Rules:
 
-- T1 and T2 are the only tiers allowed for normal pre-execution outward output.
+- T1-lite, T1, and T2 are the only tiers allowed for normal pre-execution outward output.
+- `LITE` preview (no code) uses `Execution Summary` only with no `Slice`.
 - T1b replaces full completion/review reports for ordinary finished work.
 - T3 templates below are canonical for audit mode; do not emit them in T1/T2 unless explicitly requested.
+
+### T1-lite outward set
+
+- `Execution Summary` with embedded `Slice` (Goal / Edit / Done)
+- do **not** emit a separate `Task Contract Summary` block
 
 ### T1 outward set
 
@@ -60,12 +67,13 @@ Default pre-execution output should stay compact.
 
 In summary mode:
 
-- Default outward packet should normally be `Execution Summary` plus `Task Contract Summary`.
+- Default outward packet should normally be `Execution Summary` plus `Task Contract Summary`, except `LITE execute` uses `Execution Summary` with embedded `Slice` only.
 - Keep each section short, usually within 4-8 lines.
 - Prefer module groups or up to 3 key files over exhaustive file lists.
 - Do not dump full call chains, full test matrices, or long acceptance checklists.
 - Use focused-expansion or detailed templates only when routing explicitly requires expansion.
-- Do not hide `Task Contract Summary` in default mode once execution is being prepared.
+- Do not hide `Task Contract Summary` in default mode once execution is being prepared for `FAST` and above.
+- For `LITE execute`, freeze `Slice` inside `Execution Summary` instead of emitting a separate `Task Contract Summary`.
 - Do not let official-docs reporting break the default minimal outward packet unless risk, anomaly, or explicit detailed mode requires it.
 - Hard default-output cap: summary mode may not emit `Project Understanding Summary`, `Impact Analysis Summary`, or `Official Docs Check Summary` as separate outward blocks by default.
 - Treat those stage summaries as internal records unless they carry a blocker, anomaly, implementation-changing official constraint, or risk that cannot fit in `Risk Note` or `Exception Note`.
@@ -101,6 +109,38 @@ When structural fallback is active, set `Structural tool` to one compact line, f
 `CodeGraph unavailable, fallback: limited read`
 
 Other allowed fallback labels: `secondary structural tool`, `ALLOW_WITHOUT_CODEGRAPH`. Omit the line when CodeGraph or another structural tool is healthy and in use.
+
+### LITE Execution Summary
+
+Use for `LITE execute` instead of separate `Execution Summary` + `Task Contract Summary`.
+
+```md
+## Execution Summary
+- Task:
+- Mode: LITE
+- Rules:
+- Slice:
+  - Goal:
+  - Edit:
+  - Done:
+- Status: ALLOW / ALLOW_WITH_WARNINGS / BLOCKED
+- Next:
+```
+
+`Slice` is the frozen Micro Contract. Do not emit `## Task Contract Summary` as a peer block in T1-lite mode.
+
+### LITE preview
+
+When the user requests routing only, omit `Slice` and do not prepare for code changes:
+
+```md
+## Execution Summary
+- Task:
+- Mode: LITE
+- Rules:
+- Status: ALLOW / ALLOW_WITH_WARNINGS / BLOCKED
+- Next:
+```
 
 ## Risk Note
 
@@ -546,7 +586,18 @@ T1b default outward block when work is finished. Use instead of full completion 
 
 `Diff scope` confirms Minimum Change Constraint compliance: only Task Contract–allowed surfaces changed.
 
-For `bugfix` tasks, use the bug-fix field set instead:
+### LITE Completion Summary
+
+Use when `LITE execute` finishes. Shorter than the default T1b completion block.
+
+```md
+## Completion Summary
+- Changed:
+- Done check:
+- Unverified:
+```
+
+For `bugfix` tasks, do not use LITE completion; use the bug-fix field set below instead:
 
 ```md
 ## Completion Summary

@@ -1,6 +1,6 @@
 ---
 name: devguard
-description: Dev guardrails: route, gates, Contract, minimal rules. Use for code/bugfix/UI/review. Not for typo-only edits.
+description: Dev guardrails: route, gates, Contract. Use for LITE micro edits; FAST+ for bugfix/UI. Not for unscoped work.
 ---
 
 # DevGuard
@@ -17,7 +17,7 @@ When DevGuard runs alongside domain execution skills (feature, bug-fix, UI, migr
 4. **Do not duplicate** domain skill TDD, debug, or stack-specific detail inside DevGuard output.
 5. **When the user names a domain skill explicitly**, DevGuard limits itself to routing + Contract; the named skill executes.
 
-Short triggers: `/devguard fast`, `/devguard strict`, `/devguard review` — see [example-prompts.md](references/example-prompts.md).
+Short triggers: `/devguard lite`, `/devguard fast`, `/devguard strict`, `/devguard review` — see [example-prompts.md](references/example-prompts.md).
 
 ## Core Responsibilities
 
@@ -25,7 +25,7 @@ Do:
 
 1. Classify task type, risk, complexity, and execution mode.
 2. Choose the minimum skill chain and rule-loading plan.
-3. Emit compact pre-execution output (`Execution Summary`; keep `Task Contract Summary` visible once execution is prepared).
+3. Emit compact pre-execution output (`Execution Summary`; `Task Contract Summary` for `FAST`+; embedded `Slice` for `LITE` execute).
 4. Run project understanding, then official docs check when required, then impact analysis, then freeze Task Contract before coding.
 5. Enforce evidence, TDD, review, and blocking gates; reroute when facts change.
 6. Keep every edit inside the [Minimum Change Constraint](references/shared-guardrails.md#minimum-change-constraint): simplest correct diff within frozen Task Contract scope.
@@ -72,7 +72,7 @@ Full rule selection: [rule-disclosure-index.md](references/rule-disclosure-index
 
 ## Operating Rules
 
-- Default outward output: `Execution Summary` + `Task Contract Summary`; use `Risk Note` or `Exception Note` only for high-risk or anomaly slices.
+- Default outward output: `Execution Summary` + `Task Contract Summary` for `FAST` and above; `LITE execute` uses `Execution Summary` with embedded `Slice` only (no separate TCS).
 - Hard default-output cap: do not emit `Project Understanding Summary`, `Impact Analysis Summary`, or `Official Docs Check Summary` as separate outward blocks in default mode.
 - Render summaries as standalone record blocks; keep conversation outside the block.
 - Prefer CodeGraph for structural understanding; pass freshness gate before trusting index results.

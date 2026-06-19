@@ -68,6 +68,10 @@ Before calling work done, confirm:
 
 Lane-specific detail still lives in execution cores — for example [bug-fix-core.md](bug-fix-core.md) for evidence-first repair — but they must not relax this floor.
 
+### LITE Micro Slice
+
+For `LITE execute` only, a frozen `Slice` inside `Execution Summary` satisfies the Task Contract floor. It does not replace full `Task Contract Summary` on `FAST` and above, and never replaces the bug-fix Evidence Gate.
+
 ## TDD Floor
 
 Default to `Red -> Green -> Refactor` for code changes, bug fixes, UI feature bindings, and refactors.

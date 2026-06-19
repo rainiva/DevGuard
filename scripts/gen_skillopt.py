@@ -165,6 +165,30 @@ def main() -> None:
                 {"op": "max_chars", "arg": 8000},
             ],
         ),
+        entry(
+            "lite-typo-execute",
+            "route a single-file typo fix in one local README with no auth, data, or platform risk. "
+            "Use LITE mode, freeze Slice inside Execution Summary, do not emit Task Contract Summary, "
+            "and do not code.",
+            [
+                {"op": "section_present", "arg": "Execution Summary"},
+                {"op": "contains", "arg": "LITE"},
+                {"op": "contains", "arg": "Slice"},
+                {"op": "not_contains", "arg": "Task Contract Summary"},
+                {"op": "max_chars", "arg": 6000},
+            ],
+        ),
+        entry(
+            "lite-upgrade-fast",
+            "route this auth login bugfix with failing reproduction evidence. Keep outward output compact, "
+            "upgrade off LITE if needed, and do not code.",
+            [
+                {"op": "section_present", "arg": "Execution Summary"},
+                {"op": "section_present", "arg": "Task Contract Summary"},
+                {"op": "contains", "arg": "FAST"},
+                {"op": "max_chars", "arg": 12000},
+            ],
+        ),
     ]
 
     held_out = [

@@ -40,6 +40,15 @@ Use these as a pressure check, not as a hard mechanical cap.
 
 Meta rules and mandatory pre-execution gates do not consume the execution-core budget. Count them separately so routing safety does not appear to compete with implementation-lane rules.
 
+### LITE
+
+- Core: `0-1`
+- Extensions: `0`
+- Project rules: `0-1`
+- Playbooks: `0`
+
+`LITE` skips pre-execution gate references unless reroute upgrades the task. Micro Slice inside `Execution Summary` satisfies the Contract freeze for whitelist micro-edits.
+
 ### FAST
 
 - Core: `1-2`

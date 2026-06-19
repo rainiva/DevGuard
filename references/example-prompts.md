@@ -6,11 +6,12 @@ Compact invocation shapes. Replace `{task}` with the concrete request.
 
 | Trigger | Effect |
 |---|---|
+| `/devguard lite` | Force `LITE` mode; micro daily execute with `Slice` in ES when whitelist matches; preview-only when user says not to code |
 | `/devguard fast` | Force `FAST` mode; compact Contract; minimal pre-execution gates per Gate Matrix |
 | `/devguard strict` | Force `STRICT` mode; deep gates; focused expansion on risk |
 | `/devguard review` | Review-only route; findings first; no code changes |
 
-Usage: prepend the trigger to the task, for example `` `/devguard fast` {task} `` or `` `/devguard review` review this PR ``.
+Usage: prepend the trigger to the task, for example `` `/devguard lite` fix typo in README line 12 `` or `` `/devguard fast` {task} ``.
 
 Default one-liner when no trigger is given:
 
@@ -18,6 +19,7 @@ Default one-liner when no trigger is given:
 
 ## Scenarios (one line each)
 
+- **LITE daily:** `` `/devguard lite` fix the typo in {file} — freeze Slice in ES, no separate TCS, then edit. ``
 - **Feature:** `Use $devguard to route {task}. ES+TCS only; expand on risk.`
 - **UI:** `Use $devguard for UI work on {task}. Real user-path verification in Contract; ES+TCS.`
 - **Bug fix:** `Use $devguard for bug fix: {task}. Red before repair; minimal diff; ES+TCS.`
