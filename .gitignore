@@ -12,3 +12,4 @@ graphify-out/
 skillopt/*
 !skillopt/benchmark.jsonl
 !skillopt/held-out.jsonl
+!skillopt/simulate_fixtures.json
