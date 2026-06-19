@@ -155,34 +155,36 @@ Gate notes:
 
 ## Default Skill Chains
 
+Phase labels: **[Orient]** route / Socratic? / load plan / ES+TCS · **[Prepare]** PU / docs? / IA / Contract · **[Act]** TDD / domain / review. See [control-plane-core.md](control-plane-core.md).
+
 `socratic-inquiry?` means run Socratic inquiry only when the Socratic Gate in [socratic-inquiry-core.md](socratic-inquiry-core.md) fires. `official-docs-check?` means route the check only when the Official Docs Check Gate says platform, framework, SDK, host, control-template, lifecycle, threading, permission, installer, component-library, or design constraints may govern the task. `task-contract-freeze` means freeze the Task Contract from `references/report-templates.md` before TDD or execution.
 
-- New feature: `socratic-inquiry? -> codegraph-project-understanding -> official-docs-check? -> impact-analysis -> task-contract-freeze -> tdd-workflow -> daily-development -> code-review`
-- UI implementation: `socratic-inquiry? -> codegraph-project-understanding -> official-docs-check? -> impact-analysis -> task-contract-freeze -> tdd-workflow -> ui-implementation -> code-review`
-- Bug fix: `socratic-inquiry? -> codegraph-project-understanding -> official-docs-check? -> bug-fix(diagnosis-only) -> impact-analysis -> task-contract-freeze -> tdd-workflow -> bug-fix(minimal-repair) -> code-review`
-- WPF or desktop UI bug: `socratic-inquiry? -> codegraph-project-understanding -> official-docs-check? -> bug-fix(diagnosis-only) -> compatibility-impact-analysis -> impact-analysis -> task-contract-freeze -> tdd-workflow -> ui-implementation -> bug-fix(regression-verification) -> code-review`
-- Performance-sensitive change: `socratic-inquiry? -> codegraph-project-understanding -> official-docs-check? -> impact-analysis -> performance-impact-analysis -> task-contract-freeze -> tdd-workflow -> daily-development -> performance-review-core -> code-review`
-- Refactor or migration: `socratic-inquiry? -> codegraph-project-understanding -> official-docs-check? -> impact-analysis -> migration-refactor -> task-contract-freeze -> tdd-workflow -> code-review -> release-check`
-- AI or LLM feature: `socratic-inquiry? -> codegraph-project-understanding -> official-docs-check? -> impact-analysis -> task-contract-freeze -> ai-llm-feature -> tdd-workflow -> code-review`
-- Release or go-live: `release-check`
-- Repeated failed repair: `codegraph-project-understanding -> official-docs-check? -> failure-retrospective-core -> bug-fix(diagnosis-only) -> impact-analysis -> dynamic-reroute-core -> task-contract-freeze -> tdd-workflow -> bug-fix(minimal-repair) -> code-review`
-- LITE daily micro-edit: `task-contract-freeze(micro-slice) -> daily-development`
+- New feature: `socratic-inquiry? -> codegraph-project-understanding -> official-docs-check? -> impact-analysis -> task-contract-freeze -> tdd-workflow -> daily-development -> code-review` — Orient through socratic?; Prepare through contract-freeze; Act thereafter
+- UI implementation: `socratic-inquiry? -> codegraph-project-understanding -> official-docs-check? -> impact-analysis -> task-contract-freeze -> tdd-workflow -> ui-implementation -> code-review` — Orient · Prepare · Act
+- Bug fix: `socratic-inquiry? -> codegraph-project-understanding -> official-docs-check? -> bug-fix(diagnosis-only) -> impact-analysis -> task-contract-freeze -> tdd-workflow -> bug-fix(minimal-repair) -> code-review` — Orient · Prepare · Act
+- WPF or desktop UI bug: `socratic-inquiry? -> codegraph-project-understanding -> official-docs-check? -> bug-fix(diagnosis-only) -> compatibility-impact-analysis -> impact-analysis -> task-contract-freeze -> tdd-workflow -> ui-implementation -> bug-fix(regression-verification) -> code-review` — Orient · Prepare · Act
+- Performance-sensitive change: `socratic-inquiry? -> codegraph-project-understanding -> official-docs-check? -> impact-analysis -> performance-impact-analysis -> task-contract-freeze -> tdd-workflow -> daily-development -> performance-review-core -> code-review` — Orient · Prepare · Act
+- Refactor or migration: `socratic-inquiry? -> codegraph-project-understanding -> official-docs-check? -> impact-analysis -> migration-refactor -> task-contract-freeze -> tdd-workflow -> code-review -> release-check` — Orient · Prepare · Act (+ release in Act)
+- AI or LLM feature: `socratic-inquiry? -> codegraph-project-understanding -> official-docs-check? -> impact-analysis -> task-contract-freeze -> ai-llm-feature -> tdd-workflow -> code-review` — Orient · Prepare · Act
+- Release or go-live: `release-check` — Act only
+- Repeated failed repair: `codegraph-project-understanding -> official-docs-check? -> failure-retrospective-core -> bug-fix(diagnosis-only) -> impact-analysis -> dynamic-reroute-core -> task-contract-freeze -> tdd-workflow -> bug-fix(minimal-repair) -> code-review` — Orient entry via reroute; Prepare through contract-freeze; Act thereafter
+- LITE daily micro-edit: `task-contract-freeze(micro-slice) -> daily-development` — Orient (router) · Prepare (micro-slice) · Act
 
 ## Named Routes
 
 Use these preset route IDs when routing output needs a stable label. Expected rule counts follow [rule-loading.md](rule-loading.md) budgets: core + extensions, excluding meta rules and mandatory pre-execution gates.
 
-| Route ID | Mode | Complexity | Skill chain | Expected rules (core + ext) |
-|---|---|---|---|---|
-| `route:feature-normal` | STANDARD | S2 | New feature chain | 4-6 |
-| `route:ui-implementation` | STANDARD | S2 | UI implementation chain | 4-7 |
-| `route:bugfix-standard` | STANDARD | S2 | Bug fix chain | 4-6 |
-| `route:bugfix-desktop-ui` | STANDARD | S2-S3 | WPF or desktop UI bug chain | 5-8 |
-| `route:refactor-migration` | STANDARD / STRICT | S2-S4 | Refactor or migration chain | 5-9 |
-| `route:performance-change` | STANDARD / STRICT | S2-S3 | Performance-sensitive change chain | 5-8 |
-| `route:ai-llm-feature` | STANDARD / STRICT | S2-S4 | AI or LLM feature chain | 5-9 |
-| `route:review-only` | FAST / STANDARD | S0-S2 | `code-review` (+ review extensions as needed) | 2-5 |
-| `route:lite-daily` | LITE | S1-micro | LITE daily micro-edit chain | 1-2 |
+| Route ID | Mode | Complexity | Phases | Skill chain | Expected rules (core + ext) |
+|---|---|---|---|---|---|
+| `route:feature-normal` | STANDARD | S2 | O→P→A | New feature chain | 4-6 |
+| `route:ui-implementation` | STANDARD | S2 | O→P→A | UI implementation chain | 4-7 |
+| `route:bugfix-standard` | STANDARD | S2 | O→P→A | Bug fix chain | 4-6 |
+| `route:bugfix-desktop-ui` | STANDARD | S2-S3 | O→P→A | WPF or desktop UI bug chain | 5-8 |
+| `route:refactor-migration` | STANDARD / STRICT | S2-S4 | O→P→A | Refactor or migration chain | 5-9 |
+| `route:performance-change` | STANDARD / STRICT | S2-S3 | O→P→A | Performance-sensitive change chain | 5-8 |
+| `route:ai-llm-feature` | STANDARD / STRICT | S2-S4 | O→P→A | AI or LLM feature chain | 5-9 |
+| `route:review-only` | FAST / STANDARD | S0-S2 | O→A | `code-review` (+ review extensions as needed) | 2-5 |
+| `route:lite-daily` | LITE | S1-micro | O→P→A | LITE daily micro-edit chain | 1-2 |
 
 Pick the Named Route that best matches the Default Skill Chain. If the chain diverges materially, reroute instead of forcing the preset label.
 
